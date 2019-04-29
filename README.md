@@ -20,7 +20,7 @@ Sur une grille, chaque joueur contrôle plusieurs personnages  tour à tour. Cha
 
 
 ### Organisation du code
-.
+```
 ├── Affichage.java
 ├── GameManager.java
 ├── Joueur.java
