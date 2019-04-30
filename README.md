@@ -5,7 +5,7 @@ Un Tactical-RPG au tour par tour
 Nous avons choisi le 5ème problème, le jeu de plateau, où l'objectif 
 est de simuler un combat entre deux entités.
 Le style du TRPG s'est imposé naturellement à la lecture de l'énoncé, comme combat entre deux joueurs manipulant des tableaux 2D.
-Nous utiliserons l'affichage du TP11 du S2 sur Swing, modifié selon nos besoins.
+Nous utiliserons Swing et AWT pour l'affichage graphique et la gestion des évements
 
 ### Cahier des charges
 Sur une grille, chaque joueur contrôle plusieurs personnages  tour à tour. Chaque personnage a des caractéristiques différentes. Le premier joueur qui a éliminé les personnages de l'adversaire gagne.
