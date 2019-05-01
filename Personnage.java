@@ -1,67 +1,66 @@
-public class Perso{
-	
-	private String = name;
-	private int hp;
-	private int hpmax;
-	private int def;
-	private int range;
-	private int off;
-	private int speed;
-	private int magic;
-	private int magicmax;
-	private boolean alive;
-	private int type;
-	private int posX;
-	private int posY;
-	private int precis;
-	private int joueur;
-	
-	public Perso(int h, int a ,int z,int e,int r,int t,int y,int u, int i, int o, int p, int m, int l, int k, int j){
-		
-		this.hp = a;
-		this.hpmax = z;
-		this.def = e;
-		this.range = r;
-		this.off = t;
-		this.speed = y ;
-		this.magic = u;
-		this.magicmax = i;
-		this.alive = o;
-		this.type = p;
-		this.li = m;
-		this.co = l;
-		this.precis = k;
-		this.joueur = j;
-		this.name = h;
-		
+public class Personnage{
+
+	public String name; // Nom du personnage
+	private boolean alive; // Est-ce que le personnage est en vie
+	public String type; // Classe du personnage
+
+	private int posX; // colonne sur la map
+	private int posY; // ligne
+
+	public int hp; // Points de vie restants
+	public int hpMax; // Points de vie totaux
+	public int mp; // Points de magie restants
+	public int mpMax; // Points de vie totaux
+	public int def; // Points de défense/bouclier
+	public int attack; // Points de dégats moyen
+
+	public int range; // Portée d'attaque en nb de cases
+	public int speed; // Portée de déplacement
+	public int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
+
+	public Personnage(String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision){
+		this.name = name;
+		this.type = type;
+		this.alive = true;
+
+		this.posX = posX;
+		this.posY = posY;
+
+		this.hp = hp;
+		this.hpMax = hp;
+		this.mp = mp;
+		this.mpMax = mp;
+		this.def = def;
+
+		this.attack = attack;
+		this.range = range;
+		this.speed = speed;
+		this.precision = precision;
 	}
-	
-	public String getThis(){
-		String resume = new String();
-		resume = 
-		return (this.name+" a encore "+this.hp+"pv, 
-	
-	public int getPosX(){
+
+	public String toString(){
+		return this.name + " a encore " + this.hp + "hp";
+	}
+
+	public void weaken(int damage){
+		this.hp -= damage;
+	}
+
+	public void attack(Personnage adversary){
+		int damage = (this.attack - this.precision) + (int)(Math.random() * (2 * this.precision +1));
+		/*
+		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats
+		*/
+		adversary.weaken(damage);
+	}
+
+	/**** GETTERS & SETTERS ****/
+	public int getPosX() {
 		return this.posX;
 	}
-	public int getPosY(){
+
+	public int getPosY() {
 		return this.posY;
-	
-	public int getDef();
-		return this.def;
 	}
-	
-	public void weaken(int pow){
-		this.pv = this.pv - pow;
-	}
-	
-	public void attac (Perso ennemy){
-		
-		int pow = this.off + this.precis*Math.random()*Math.pow(-1,(int)Math.random) - ennemy.getDef();
-		
-		ennemy.weaken(pow);
-		
-	}
-		
-		
-		
+	/***************************/
+}

@@ -3,6 +3,10 @@ import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Affichage extends JFrame {
     private static JSplitPane splitPane;
@@ -22,7 +26,7 @@ public class Affichage extends JFrame {
 
         res = calcRes(map); // Résolution des cases en px en fonction de la taille de l'écran
         setPreferredSize(new Dimension(res * map.length,
-                         res * map[0].length+messageHeight)); // Réglage de la taille de la fenêtre
+                                       res * map[0].length+messageHeight)); // Réglage de la taille de la fenêtre
 
         getContentPane().setLayout(new GridLayout()); // Layout en forme de grille qui va recevoir les panels
         getContentPane().add(splitPane);
@@ -77,9 +81,24 @@ public class Affichage extends JFrame {
 
         public Map(int[][] map) {
             this.map = map;
-            res = Affichage.calcRes(this.map);
+            this.res = Affichage.calcRes(this.map);
+
             worldImage = new BufferedImage(res * this.map.length, res * this.map.length, BufferedImage.TYPE_INT_RGB);
             setPreferredSize(new Dimension(res * this.map.length, res * this.map.length));
+
+            addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseClicked(MouseEvent e){
+                    int x = e.getX();
+                    int y = e.getY();
+
+                    changeMessage((int)(x/res) + " " + (int)(y/res));
+                    mapPanel.map[(int)(y/res)][(int)(x/res)] = 2;
+                    mapPanel.repaint();
+
+                    GameManager.clic();
+                }
+            });
         }
 
         private void dessineMonde(Graphics g) {
