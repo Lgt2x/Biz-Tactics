@@ -8,7 +8,13 @@ public class GameManager {
         map[9][3] = 2;
         map[mapSize-1][mapSize-1] = 1;
         map[0][mapSize-1] = 1;
-        Affichage2.afficherPlateau(map);
+
+        Affichage2 aff = new Affichage2();
+
+        aff.changeMessage("Coucou");
+
+        pause(2000);
+        aff.changeMessage("Lll");
     }
 
     public static void pause(int ms) {
