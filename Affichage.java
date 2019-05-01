@@ -4,59 +4,78 @@ import java.awt.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
-
 public class Affichage extends JFrame {
+    private static JSplitPane splitPane;
+    private static Map mapPanel;
+    private static JPanel bottomPanel;
+    private static JLabel message;
+    private final int messageHeight = 100;
+    public int res;
 
-    private static Affichage world = null;
-    private PanneauGrille pg;
-
-    private Affichage(int[][] p) {
+    public Affichage(int[][] map) {
         super("T-RPG"); // Nom de la fenêtre
-        pg = new PanneauGrille(p); // Grille d'affichage de la map
-        setContentPane(pg); // Panel qui contient des éléments
+
+        splitPane = new JSplitPane(); // Conteneur global qui comprend la map et le message
+        mapPanel = new Map(map); // Grille d'affichage, sous forme de classe
+        bottomPanel = new JPanel(); // Panel du bas qui contient le texte
+        message = new JLabel("Some text"); // Message en bas
+
+        res = calcRes(map); // Résolution des cases en px en fonction de la taille de l'écran
+        setPreferredSize(new Dimension(res * map.length,
+                         res * map[0].length+messageHeight)); // Réglage de la taille de la fenêtre
+
+        getContentPane().setLayout(new GridLayout()); // Layout en forme de grille qui va recevoir les panels
+        getContentPane().add(splitPane);
+
+        splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        splitPane.setDividerLocation(200);
+        splitPane.setTopComponent(mapPanel);
+        splitPane.setBottomComponent(bottomPanel);
+        splitPane.setDividerSize(5); // Taille en px du séparateur
+        splitPane.setDividerLocation(res*map[0].length); // Emplacement du séparateur depuis le haut
+        splitPane.setEnabled(false); // Le séparateur ne peut plus bouger
+
+        bottomPanel.setMaximumSize(new Dimension(res*map.length, 100));
+        bottomPanel.add(message);
+
         pack(); // Arrange la fenêtre
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Sort du jeu lors du clic sur le bouton de fermeture
         setLocationRelativeTo(null); // Centre
         setResizable(false); // Le fenêtre ne peut pas être redimensionnée
         setVisible(true); // La fenêtre est visible
+
+
     }
 
-    public static void afficherPlateau(int[][] map) { // L'affichage est demandé
-        if (world == null) // Si le map n'est pas encore créé, on crée une fenêtre pour l'affichage
-            world = new Affichage(map);
-
-        world.pg.map = map;
-        world.repaint();
-    }
-
-    /**
-     * Calcule la resolution la plus appropriee a la taille de map de
-     * facon a ce que la fenetre occupe 80% de la hauteur ou de la
-     * largeur de la zone utile de l'ecran
-     * de l'ecran.
-     *
-     * @param monde le map à afficher
-     */
-    private static int calcRes(int[][] monde) {
-        final double p = .9; // pourcentage de la zone utile a occuper
+    public static int calcRes(int[][] monde) {
+        final double p = .8; // pourcentage de la zone utile a occuper
         int resC;
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds(); // Taille zone utile
 
         resC = Math.min((int) (bounds.height * p) / monde.length,
-                (int) (bounds.width * p) / monde[0].length);
+        (int) (bounds.width * p) / monde[0].length);
 
         resC = Math.max(1, resC); // valeur plancher de 1
 
         return resC;
     }
 
-    class PanneauGrille extends JPanel {
+    public static void changeMessage(String m) {
+        message.setText(m);
+    }
+
+    public static void actualisePlateau(int[][] map) { // L'affichage est demandé
+        mapPanel.map = map;
+        mapPanel.repaint(); // Appel de la méthode paint de la map
+    }
+
+    class Map extends JPanel {
         private int res;
         private int[][] map;
         private BufferedImage worldImage;
 
-        public PanneauGrille(int[][] map) {
+        public Map(int[][] map) {
             this.map = map;
             res = Affichage.calcRes(this.map);
             worldImage = new BufferedImage(res * this.map.length, res * this.map.length, BufferedImage.TYPE_INT_RGB);
@@ -64,32 +83,42 @@ public class Affichage extends JFrame {
         }
 
         private void dessineMonde(Graphics g) {
-            int nbL = map.length;
-            int nbC = map.length;
+            int largeurMap = map.length;
+            int hauteurMap = map[0].length;
 
             g.setColor(Color.WHITE); // Couleur de fond
-            g.fillRect(0, 0, res * nbC, res * nbL);
+            g.fillRect(0, 0, res * hauteurMap, res * largeurMap); // Remplissage
 
-            // Cases
-            g.setColor(Color.BLACK);
-            for (int i = 0; i < nbL; i++) {
-                for (int j = 0; j < nbC; j++) {
-                    switch (map[i][j]) {
-                        case 0:
-                            g.setColor(Color.WHITE);
-                            break;
-                        case 1:
-                            g.setColor(Color.BLACK);
-                            break;
-                        case 2:
-                            g.setColor(Color.BLUE);
-                            break;
-                        default:
-                            g.setColor(Color.WHITE);
-                    }
-                    g.fillRect(res * j, res * i, res, res);
+            /*
+                COULEURS
+                0 = BLANC
+                1 = NOIR
+                2 = BLEU
+                Défaut: BLANC
+            */
+
+            for (int i = 0; i < largeurMap; i++) {
+                for (int j = 0; j < hauteurMap; j++) {
+                    remplitCase(i, j, map[i][j], g);
                 }
             }
+        }
+
+        private void remplitCase(int ligne, int colonne, int couleur, Graphics g) {
+            switch (couleur) {
+                case 0:
+                    g.setColor(Color.WHITE);
+                    break;
+                case 1:
+                    g.setColor(Color.BLACK);
+                    break;
+                case 2:
+                    g.setColor(Color.BLUE);
+                    break;
+                default:
+                    g.setColor(Color.WHITE);
+            }
+            g.fillRect(res * colonne, res * ligne, res, res);
         }
 
         public void paint(Graphics g) {
@@ -99,3 +128,5 @@ public class Affichage extends JFrame {
         }
     }
 }
+
+// https://stackoverflow.com/questions/15694107/how-to-layout-multiple-panels-on-a-jframe-java

@@ -9,7 +9,7 @@ public class GameManager {
         map[mapSize-1][mapSize-1] = 1;
         map[0][mapSize-1] = 1;
 
-        Affichage2 aff = new Affichage2();
+        Affichage aff = new Affichage(map);
 
         aff.changeMessage("Coucou");
 
