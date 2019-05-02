@@ -1,9 +1,10 @@
 public class GameManager {
-    public static Affichage aff;
+    private static Affichage aff;
+    public static int[][] map;
 
     public static void main(String[] args) {
         int mapSize = 10;
-        int[][] map = new int[mapSize][mapSize];
+        map = new int[mapSize][mapSize];
 
         /* Test de la map */
         map[0][0] = 1;
@@ -12,10 +13,10 @@ public class GameManager {
         map[mapSize-1][mapSize-1] = 1;
         map[0][mapSize-1] = 1;
 
+        Affichage aff = new Affichage(this);
 
-        Affichage aff = new Affichage(map);
-
-        aff.changeMessage("ex");
+        Joueur player1 = new Joueur("Joueur 1");
+        player1.addPerso("Mage", "mage", 1, 1, 20,  5,  5,  2,  2,  10,  3);
     }
 
     public static void pause(int ms) {
