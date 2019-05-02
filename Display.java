@@ -70,10 +70,6 @@ public class Display extends JFrame {
         return resC;
     }
 
-    public static void actualisePlateau() { // L'Display est demandé
-        mapPanel.repaint(); // Appel de la méthode paint de la gm.map
-    }
-
     public static void changeMessage(String m) {
         message.setText(m);
     }

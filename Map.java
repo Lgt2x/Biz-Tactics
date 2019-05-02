@@ -35,7 +35,7 @@ public class Map extends JPanel {
         });
     }
 
-    private void dessineMonde(Graphics g) {
+    private void drawTiles(Graphics g) {
         int largeurMap = gm.map.length;
         int hauteurMap = gm.map[0].length;
 
@@ -54,12 +54,12 @@ public class Map extends JPanel {
 
         for (int i = 0; i < largeurMap; i++) {
             for (int j = 0; j < hauteurMap; j++) {
-                remplitCase(i, j, gm.map[i][j], g);
+                fillTile(i, j, gm.map[i][j], g);
             }
         }
     }
 
-    private void remplitCase(int ligne, int colonne, int couleur, Graphics g) {
+    private void fillTile(int ligne, int colonne, int couleur, Graphics g) {
         switch (couleur) {
             case 0:
                 g.setColor(Color.WHITE);
@@ -78,7 +78,7 @@ public class Map extends JPanel {
 
     public void paint(Graphics g) {
         Graphics gw = worldImage.getGraphics();
-        dessineMonde(gw);
+        drawTiles(gw);
         g.drawImage(worldImage, 0, 0, null);
     }
 }
