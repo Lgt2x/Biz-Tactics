@@ -8,17 +8,17 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-class Map extends JPanel {
-    private Affichage aff;
+public class Map extends JPanel {
+    private Display aff;
     private GameManager gm;
     private BufferedImage worldImage;
 
-    public Map(Affichage aff, GameManager gm) {
+    public Map(Display aff, GameManager gm) {
         this.aff = aff;
         this.gm = gm;
 
-        worldImage = new BufferedImage(aff.res * this.map.length, aff.res * this.map.length, BufferedImage.TYPE_INT_RGB);
-        setPreferredSize(new Dimension(aff.res * this.map.length, aff.res * this.map.length));
+        worldImage = new BufferedImage(aff.res * gm.map.length, aff.res * gm.map.length, BufferedImage.TYPE_INT_RGB);
+        setPreferredSize(new Dimension(aff.res * gm.map.length, aff.res * gm.map.length));
 
         addMouseListener(new MouseAdapter(){
             @Override
@@ -26,33 +26,35 @@ class Map extends JPanel {
                 int x = e.getX();
                 int y = e.getY();
 
-                changeMessage((int)(x/aff.res) + " " + (int)(y/aff.res));
-                mapPanel.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
-                mapPanel.repaint();
+                aff.changeMessage((int)(x/aff.res) + " " + (int)(y/aff.res));
+                gm.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
+                repaint();
 
-                GameManager.clic();
+                gm.clic();
             }
         });
     }
 
     private void dessineMonde(Graphics g) {
-        int largeurMap = map.length;
-        int hauteurMap = map[0].length;
+        int largeurMap = gm.map.length;
+        int hauteurMap = gm.map[0].length;
 
         g.setColor(Color.WHITE); // Couleur de fond
         g.fillRect(0, 0, aff.res * hauteurMap, aff.res * largeurMap); // Remplissage
 
         /*
+
             COULEURS
             0 = BLANC
             1 = NOIR
             2 = BLEU
             Défaut: BLANC
+
         */
 
         for (int i = 0; i < largeurMap; i++) {
             for (int j = 0; j < hauteurMap; j++) {
-                remplitCase(i, j, map[i][j], g);
+                remplitCase(i, j, gm.map[i][j], g);
             }
         }
     }

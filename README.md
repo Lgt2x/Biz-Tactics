@@ -43,8 +43,10 @@ Planning prévisionnel:
 ## Organisation du code
 
 ```
-├── Affichage.java # Gestion de l'affichage
+├── Launch.java # Lancement du jeu
 ├── GameManager.java # Gestion du plateau, des joueurs
+├── Affichage.java # Gestion de l'affichage
+├── Map.java # Gestion de la map
 ├── Joueur.java # Classe du joueur, contenant les personnages
 ├── Personnage.java # Classe du personnage, avec ses caractéristiques
 ├── maps.txt # Maps prédéfinies, à charger
@@ -52,4 +54,11 @@ Planning prévisionnel:
 │   └── Img1.png
 │   └── ...
 └── types.txt # Définition des types de personnages ainsi que leurs caractéristiques
+```
+
+## Run
+
+```bash
+javac *.java
+java Launch
 ```

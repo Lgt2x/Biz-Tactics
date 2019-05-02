@@ -1,4 +1,4 @@
-public class Personnage{
+public class Character{
 
 	public String name; // Nom du personnage
 	private boolean alive; // Est-ce que le personnage est en vie
@@ -18,7 +18,7 @@ public class Personnage{
 	public int speed; // Portée de déplacement
 	public int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
 
-	public Personnage(String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision){
+	public Character(String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision){
 		this.name = name;
 		this.type = type;
 		this.alive = true;
@@ -46,7 +46,7 @@ public class Personnage{
 		this.hp -= damage;
 	}
 
-	public void attack(Personnage adversary){
+	public void attack(Character adversary){
 		int damage = (this.attack - this.precision) + (int)(Math.random() * (2 * this.precision +1));
 		/*
 		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats

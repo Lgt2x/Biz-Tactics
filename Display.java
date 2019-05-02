@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class Affichage extends JFrame {
+public class Display extends JFrame {
     private static GameManager gm;
 
     private static Map mapPanel;
@@ -18,17 +18,18 @@ public class Affichage extends JFrame {
     private final int messageHeight = 100;
     public int res;
 
-    public Affichage(GameManager gm) {
+    public Display(GameManager gm) {
         super("T-RPG"); // Nom de la fenêtre
 
         this.gm = gm;
 
-        mapPanel = new Map(this, gm); // Grille d'affichage, sous forme de classe
+        res = calcRes(gm.map); // Résolution des cases en px en fonction de la taille de l'écran
+        mapPanel = new Map(this, gm); // Grille d'Display, sous forme de classe
         splitPane = new JSplitPane(); // Conteneur global qui comprend la gm.map et le message
         bottomPanel = new JPanel(); // Panel du bas qui contient le texte
         message = new JLabel("Some text"); // Message en bas
 
-        res = calcRes(gm.map); // Résolution des cases en px en fonction de la taille de l'écran
+
         setPreferredSize(new Dimension(res * gm.map.length,
                                        res * gm.map[0].length+messageHeight)); // Réglage de la taille de la fenêtre
 
@@ -69,13 +70,12 @@ public class Affichage extends JFrame {
         return resC;
     }
 
-    public static void changeMessage(String m) {
-        message.setText(m);
+    public static void actualisePlateau() { // L'Display est demandé
+        mapPanel.repaint(); // Appel de la méthode paint de la gm.map
     }
 
-    public static void actualisePlateau(int[][] gm.map) { // L'affichage est demandé
-        mapPanel.gm.map = gm.map;
-        mapPanel.repaint(); // Appel de la méthode paint de la gm.map
+    public static void changeMessage(String m) {
+        message.setText(m);
     }
 
 }
