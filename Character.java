@@ -76,6 +76,10 @@ public class Character{
 	}
 
 	/**** GETTERS & SETTERS ****/
+	public boolean isAlive () {
+		return this.alive;
+	}
+	
 	public int getPosX() {
 		return this.posX;
 	}

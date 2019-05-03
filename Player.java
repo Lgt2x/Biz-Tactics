@@ -12,4 +12,13 @@ public class Player{
 	public static void addChar (String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision) {
 		characters.add(new Character(name, type, posX, posY, hp,  def,  attack,  range,  speed,  mp,  precision));
 	}
+
+	public static boolean isDed () {
+		for (int i = 0; i < characters.size(); i++) {
+			if (characters.get(i).isAlive())
+				return false;
+		}
+
+		return true;
+	}
 }

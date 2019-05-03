@@ -27,11 +27,15 @@ public class Map extends JPanel {
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                gm.clic(); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
+                int caseX = (int)(x/aff.res);
+                int caseY = (int)(y/aff.res);
 
-                aff.changeMessage((int)(x/aff.res) + " " + (int)(y/aff.res)); // On change le message pour afficher la case
-                gm.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
-                repaint(); // Recalcul des éléments du canvas avec la map mise à jour
+                gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
+
+                aff.changeMessage(caseX + " " + caseY); // On change le message pour afficher la case
+                //gm.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
+
+                repaint(); // Recalcul des éléments du canvas mis à jour
             }
         });
     }
@@ -81,7 +85,7 @@ public class Map extends JPanel {
     private void drawChars(Graphics g, Player player) {
         for (int i = 0; i < player.characters.size(); i++) {
             Character character = player.characters.get(i); // Récupération du personnage
-            aff.changeMessage("Passé ici");
+            
             // Positionnement et affichage du personnage
             g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - character.idle.getWidth())/2,
                         character.getPosY() * aff.res + (aff.res - character.idle.getHeight())/2, null);
