@@ -32,8 +32,7 @@ public class Map extends JPanel {
                 aff.changeMessage((int)(x/aff.res) + " " + (int)(y/aff.res)); // On change le message pour afficher la case
                 gm.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
                 repaint(); // Recalcul des éléments du canvas avec la map mise à jour
-
-                            }
+            }
         });
     }
 
@@ -80,9 +79,9 @@ public class Map extends JPanel {
     }
 
     private void drawChars(Graphics g, Player player) {
-        for (int i=0; i < gm.player1.characters.size(); i++) {
+        for (int i = 0; i < player.characters.size(); i++) {
             Character character = player.characters.get(i); // Récupération du personnage
-
+            aff.changeMessage("Passé ici");
             // Positionnement et affichage du personnage
             g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - character.idle.getWidth())/2,
                         character.getPosY() * aff.res + (aff.res - character.idle.getHeight())/2, null);
@@ -94,6 +93,7 @@ public class Map extends JPanel {
 
         drawTiles(gw);
         drawChars(gw, gm.player1);
+        //drawChars(gw, gm.player2);
 
         g.drawImage(worldImage, 0, 0, null); // Affichage de l'image créée sur le Panel
     }

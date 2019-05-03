@@ -4,17 +4,19 @@ public class GameManager {
     public static int mapX = 15; // Nombre de colonnes de la map
     public static int mapY = 10; // Nombre de lignes de la map
     public static Player player1;
+    public static Player player2;
 
     public GameManager() {
-        map = new int[mapY][mapX];
-
-        /* Test de la map */
-        map[mapY-1][0] = 1;
-        map[1][3] = 2;
 
         Player player1 = new Player("Player 1");
-        player1.addChar("Mage", "mage", 1, 1, 20,  5,  5,  2,  2,  10,  3);
+        Player player2 = new Player("Player 2");
+
+        player1.addChar("Berserker", "Berserker", 1, 1, 20,  6,  5,  1,  2,  10,  3);
+        player1.addChar("Sniper", "Sniper", 1, 5, 1, 10, 5, 3, 5, 10, 3);
         
+        player2.addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
+
+        map = new int[mapY][mapX];
         Display aff = new Display(this);
 
     }

@@ -45,8 +45,11 @@ public class Character{
 		this.precision = precision;
 
 		try {
-			idle = ImageIO.read(new File("Assets/Berserker/Berserker.png"));
-		} catch (IOException e) {}
+			idle = ImageIO.read(new File("Assets/" + this.type +"/idle.png"));
+			//System.out.println(idle);
+		} catch (IOException e) {
+			System.out.println("Image non trouvée");
+		}
 	}
 
 	public String toString(){
@@ -58,7 +61,14 @@ public class Character{
 	}
 
 	public void attack(Character adversary){
+		int damage = this.attack;
+
+		/*
+		Ta formule empêche la compilation, à revoir...
+
 		int damage = (this.attack*4 - adversary.def*2) * (1 - (100-this.precision)/100 * (0.5 + (int)(Math.random())));
+		*/
+
 		/*
 		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats
 		*/
