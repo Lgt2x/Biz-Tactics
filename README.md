@@ -62,3 +62,19 @@ Planning prévisionnel:
 javac *.java
 java Launch
 ```
+
+## Todo
+
+Objectifs à court terme
+
+- Adaptation de la taille de la fenêtre pour être rectangulaire
+- Importation de sprites à partir des assets
+- Affichage des personnages depuis les sprites
+- Affichage de tiles à la place des rectangles
+- Adaptation de la taille des sprites à la taille de l'écran
+- Implémentation d'un système de tours
+- Affichage des personnages sélectionnables
+- Affichage des cases de déplacement possibles
+- Changement de couleur de la case au survol
+- Déplacement du personnage selon la case sélectionnée
+- Sélection du personnage à attaquer
