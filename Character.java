@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
 public class Character{
 
 	public String name; // Nom du personnage
@@ -18,6 +23,8 @@ public class Character{
 	public int speed; // Portée de déplacement
 	public int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
 
+	public BufferedImage idle;
+
 	public Character(String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision){
 		this.name = name;
 		this.type = type;
@@ -36,6 +43,10 @@ public class Character{
 		this.range = range;
 		this.speed = speed;
 		this.precision = precision;
+
+		try {
+			idle = ImageIO.read(new File("Assets/Berserker/Berserker.png"));
+		} catch (IOException e) {}
 	}
 
 	public String toString(){

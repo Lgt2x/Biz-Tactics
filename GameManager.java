@@ -3,6 +3,7 @@ public class GameManager {
     public static int[][] map;
     public static int mapX = 15; // Nombre de colonnes de la map
     public static int mapY = 10; // Nombre de lignes de la map
+    public static Player player1;
 
     public GameManager() {
         map = new int[mapY][mapX];
@@ -11,10 +12,11 @@ public class GameManager {
         map[mapY-1][0] = 1;
         map[1][3] = 2;
 
-        Display aff = new Display(this);
-
         Player player1 = new Player("Player 1");
         player1.addChar("Mage", "mage", 1, 1, 20,  5,  5,  2,  2,  10,  3);
+        
+        Display aff = new Display(this);
+
     }
 
     /*

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Player{
 
 	private static String name;
-	private static ArrayList<Character> characters; // A voir pour faire un ArrayList à la place
+	public static ArrayList<Character> characters; // A voir pour faire un ArrayList à la place
 
 	public Player(String name) {
 		characters = new ArrayList<Character>();

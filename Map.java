@@ -79,9 +79,22 @@ public class Map extends JPanel {
         }
     }
 
+    private void drawChars(Graphics g, Player player) {
+        for (int i=0; i < gm.player1.characters.size(); i++) {
+            Character character = player.characters.get(i); // Récupération du personnage
+
+            // Positionnement et affichage du personnage
+            g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - character.idle.getWidth())/2,
+                        character.getPosY() * aff.res + (aff.res - character.idle.getHeight())/2, null);
+        }
+    }
+
     public void paint(Graphics g) {
         Graphics gw = worldImage.getGraphics(); // Espace de dessin
+
         drawTiles(gw);
+        drawChars(gw, gm.player1);
+
         g.drawImage(worldImage, 0, 0, null); // Affichage de l'image créée sur le Panel
     }
 }
