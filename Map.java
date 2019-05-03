@@ -9,38 +9,38 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Map extends JPanel {
-    private Display aff;
-    private GameManager gm;
-    private BufferedImage worldImage;
+    private Display aff; // Référence à l'objet JFrame d'affichage
+    private GameManager gm; // Référence à la classe principale
+    private BufferedImage worldImage; // Espace de dessin
 
     public Map(Display aff, GameManager gm) {
         this.aff = aff;
         this.gm = gm;
 
-        worldImage = new BufferedImage(aff.res * gm.map.length, aff.res * gm.map.length, BufferedImage.TYPE_INT_RGB);
-        setPreferredSize(new Dimension(aff.res * gm.map.length, aff.res * gm.map.length));
+        worldImage = new BufferedImage(aff.res * gm.mapX, aff.res * gm.mapY, BufferedImage.TYPE_INT_RGB);
+        setPreferredSize(new Dimension(aff.res * gm.mapX, aff.res * gm.mapY));
 
+        // Ajout d'un récepteur d'évenement
         addMouseListener(new MouseAdapter(){
             @Override
-            public void mouseClicked(MouseEvent e){
-                int x = e.getX();
+            public void mouseClicked(MouseEvent e){ // Au clic
+                int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                aff.changeMessage((int)(x/aff.res) + " " + (int)(y/aff.res));
-                gm.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
-                repaint();
+                gm.clic(); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
 
-                gm.clic();
-            }
+                aff.changeMessage((int)(x/aff.res) + " " + (int)(y/aff.res)); // On change le message pour afficher la case
+                gm.map[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
+                repaint(); // Recalcul des éléments du canvas avec la map mise à jour
+
+                            }
         });
     }
 
     private void drawTiles(Graphics g) {
-        int largeurMap = gm.map.length;
-        int hauteurMap = gm.map[0].length;
 
         g.setColor(Color.WHITE); // Couleur de fond
-        g.fillRect(0, 0, aff.res * hauteurMap, aff.res * largeurMap); // Remplissage
+        g.fillRect(0, 0, aff.res * gm.mapX, aff.res * gm.mapY); // Remplissage
 
         /*
 
@@ -52,14 +52,14 @@ public class Map extends JPanel {
 
         */
 
-        for (int i = 0; i < largeurMap; i++) {
-            for (int j = 0; j < hauteurMap; j++) {
+        for (int i = 0; i < gm.mapY; i++) {
+            for (int j = 0; j < gm.mapX; j++) {
                 fillTile(i, j, gm.map[i][j], g);
             }
         }
     }
 
-    private void fillTile(int ligne, int colonne, int couleur, Graphics g) {
+    private void fillTile(int y, int x, int couleur, Graphics g) {
         switch (couleur) {
             case 0:
                 g.setColor(Color.WHITE);
@@ -73,12 +73,15 @@ public class Map extends JPanel {
             default:
                 g.setColor(Color.WHITE);
         }
-        g.fillRect(aff.res * colonne, aff.res * ligne, aff.res, aff.res);
+
+        if (y >= 0 && y < gm.mapY && x >= 0 && x < gm.mapX) {
+            g.fillRect(aff.res * x, aff.res * y, aff.res, aff.res);
+        }
     }
 
     public void paint(Graphics g) {
-        Graphics gw = worldImage.getGraphics();
+        Graphics gw = worldImage.getGraphics(); // Espace de dessin
         drawTiles(gw);
-        g.drawImage(worldImage, 0, 0, null);
+        g.drawImage(worldImage, 0, 0, null); // Affichage de l'image créée sur le Panel
     }
 }

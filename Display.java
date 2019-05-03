@@ -9,19 +9,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Display extends JFrame {
-    private static GameManager gm;
+    private static GameManager gm; // Référence à l'instance du GameManager
 
-    private static Map mapPanel;
-    private static JSplitPane splitPane;
-    private static JPanel bottomPanel;
-    private static JLabel message;
-    private final int messageHeight = 100;
-    public int res;
+    private static Map mapPanel; // Dessin de la map
+    private static JSplitPane splitPane; // Conteneur de tous les panels
+    private static JPanel bottomPanel; // Panel contenant le message
+    private static JLabel message; // Message affiché en bas de l'écran
+    private final int messageHeight = 100; // Hauteur du Label
+    public int res; // Taille d'un côté d'une case de la map, calculée à partir de la résolution de l'écran
 
     public Display(GameManager gm) {
         super("T-RPG"); // Nom de la fenêtre
 
-        this.gm = gm;
+        this.gm = gm; // L'objet GameManager se passe lui-même en paramètre
 
         res = calcRes(gm.map); // Résolution des cases en px en fonction de la taille de l'écran
         mapPanel = new Map(this, gm); // Grille d'Display, sous forme de classe
@@ -30,21 +30,21 @@ public class Display extends JFrame {
         message = new JLabel("Some text"); // Message en bas
 
 
-        setPreferredSize(new Dimension(res * gm.map.length,
-                                       res * gm.map[0].length+messageHeight)); // Réglage de la taille de la fenêtre
+        setPreferredSize(new Dimension(res * gm.mapX,
+                                       res * gm.mapY+messageHeight)); // Réglage de la taille de la fenêtre
 
-        getContentPane().setLayout(new GridLayout()); // Layout en forme de grille qui va recevoir les panels
-        getContentPane().add(splitPane);
+        getContentPane().setLayout(new GridLayout()); /* Layout en forme de grille qui va recevoir les panels
+                                                        (ici 1 colonne, 2 lignes) */
+        getContentPane().add(splitPane); // Ajout du panel diviseur contenant les autres dans la fenêtre
 
         splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setDividerLocation(200);
-        splitPane.setTopComponent(mapPanel);
-        splitPane.setBottomComponent(bottomPanel);
+        splitPane.setTopComponent(mapPanel); // Composant du haut: la map
+        splitPane.setBottomComponent(bottomPanel); // Composant du bas: le message
         splitPane.setDividerSize(5); // Taille en px du séparateur
-        splitPane.setDividerLocation(res*gm.map[0].length); // Emplacement du séparateur depuis le haut
+        splitPane.setDividerLocation(res*gm.mapY); // Emplacement du séparateur depuis le haut
         splitPane.setEnabled(false); // Le séparateur ne peut plus bouger
 
-        bottomPanel.setMaximumSize(new Dimension(res*gm.map.length, 100));
+        bottomPanel.setMaximumSize(new Dimension(res*gm.mapY, 100)); // Taille max du Label
         bottomPanel.add(message);
 
         pack(); // Arrange la fenêtre
@@ -58,14 +58,14 @@ public class Display extends JFrame {
     }
 
     public static int calcRes(int[][] monde) {
-        final double p = .8; // pourcentage de la zone utile a occuper
+        final double p = .8; // % de la zone utile a occuper
         int resC;
-        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds(); // Taille zone utile
+        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds(); // Espace dispo de l'écran
 
-        resC = Math.min((int) (bounds.height * p) / monde.length,
-        (int) (bounds.width * p) / monde[0].length);
-
-        resC = Math.max(1, resC); // valeur plancher de 1
+        resC = Math.max(
+            Math.min((int) (bounds.height * p) / monde.length,
+                     (int) (bounds.width * p) / monde[0].length),
+            1); // Valeur plancher de 1
 
         return resC;
     }
