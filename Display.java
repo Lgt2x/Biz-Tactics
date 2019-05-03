@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 public class Display extends JFrame {
     private static GameManager gm; // Référence à l'instance du GameManager
 
-    private static Map mapPanel; // Dessin de la map
+    public static Map mapPanel; // Dessin de la map
     private static JSplitPane splitPane; // Conteneur de tous les panels
     private static JPanel bottomPanel; // Panel contenant le message
     private static JLabel message; // Message affiché en bas de l'écran
@@ -23,7 +23,7 @@ public class Display extends JFrame {
 
         this.gm = gm; // L'objet GameManager se passe lui-même en paramètre
 
-        res = calcRes(gm.map); // Résolution des cases en px en fonction de la taille de l'écran
+        res = calcRes(gm.overlay); // Résolution des cases en px en fonction de la taille de l'écran
         mapPanel = new Map(this, gm); // Grille d'Display, sous forme de classe
         splitPane = new JSplitPane(); // Conteneur global qui comprend la gm.map et le message
         bottomPanel = new JPanel(); // Panel du bas qui contient le texte

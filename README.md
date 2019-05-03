@@ -68,6 +68,7 @@ java Launch
 Objectifs à court terme
 
 - Affichage de tiles à la place des rectangles
+- les deux joueurs sous forme de liste, plus facile à manipuler
 - Adaptation de la taille des sprites à la taille de l'écran (difficile)
 - Implémentation d'un système de tours
 - Affichage des personnages sélectionnables
