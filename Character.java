@@ -58,7 +58,7 @@ public class Character{
 	}
 
 	public void attack(Character adversary){
-		int damage = (this.attack - this.precision) + (int)(Math.random() * (2 * this.precision +1));
+		int damage = (this.attack*4 - adversary.def*2) * (1 - (100-this.precision)/100 * (0.5 + (int)(Math.random())));
 		/*
 		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats
 		*/
