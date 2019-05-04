@@ -68,8 +68,6 @@ java Launch
 Objectifs à court terme
 
 - Affichage de tiles à la place des rectangles
-- Adaptation de la taille des sprites à la taille de l'écran
-- Changement de couleur de la case au survol pour le déplacement
 - Attaque ou déplacement impossible si un autre personnage est devant l'objectif
 - Message dans le JLabel qui change en fonction de l'action effectuée/à effectuer
 - Obstacles sur la map

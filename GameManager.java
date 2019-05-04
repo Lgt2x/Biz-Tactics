@@ -83,12 +83,10 @@ public class GameManager {
             if (character.isAlive()) {
                 overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
                 counter++;
-                System.out.println(character);
             }
 
             if (counter == 0) { // Si il n'y a plus aucun personnage vivant, la partie est terminée
                 gameOver = true;
-                System.out.println("Partie terminée");
                 aff.changeMessage("Partie terminée");
             }
         }
@@ -96,7 +94,7 @@ public class GameManager {
 
     /**** SELECTION DU MOUVEMENT ****/
     public static void moveSelect(int x, int y) {
-        if (overlay[y][x] == 2) {
+        if (overlay[y][x] == 2 || overlay[y][x] == 3) {
             selectedChar.moveTo(x, y);
             aff.repaint();
             step = 2;
@@ -111,8 +109,6 @@ public class GameManager {
         int x;
         int y;
 
-        overlay [selectedChar.getPosY()][selectedChar.getPosX()] = 1;
-
         for (int offsetX = -selectedChar.speed; offsetX <= selectedChar.speed; offsetX++) {
             for (int offsetY = Math.abs(offsetX) - selectedChar.speed; offsetY <= -Math.abs(offsetX) + selectedChar.speed; offsetY++) {
 
@@ -124,6 +120,8 @@ public class GameManager {
                 }
             }
         }
+
+        overlay [selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
 
         aff.mapPanel.repaint();
     }

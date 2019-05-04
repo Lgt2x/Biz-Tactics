@@ -24,6 +24,9 @@ public class Map extends JPanel {
         new Color (204, 51, 0, opacity)     // 4: rouge, attaque possible d'un ennemi
     };
 
+    private static int caseHoveredX = 0;
+    private static int caseHoveredY = 0;
+
     public Map(Display aff, GameManager gm) {
         this.aff = aff;
         this.gm = gm;
@@ -51,6 +54,28 @@ public class Map extends JPanel {
                 repaint(); // Recalcul des éléments du canvas mis à jour
             }
         });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX(); // Récupération des coordonnées du clic
+                int y = e.getY();
+
+                int caseX = (int)(x/aff.res);
+                int caseY = (int)(y/aff.res);
+
+                if (gm.overlay[caseHoveredY][caseHoveredX] == 3)
+                    gm.overlay[caseHoveredY][caseHoveredX] = 2;
+
+                caseHoveredX = caseX;
+                caseHoveredY = caseY;
+
+                if (gm.overlay[caseY][caseX] == 2)
+                    gm.overlay[caseY][caseX] = 3;
+
+                repaint();
+            }
+        });;
     }
 
     private void drawTiles(Graphics g) {
