@@ -83,13 +83,24 @@ public class Map extends JPanel {
     }
 
     private void drawChars(Graphics g, Player player) {
+        int imgWidth;
+        int imgHeight;
+
         for (int i = 0; i < player.characters.size(); i++) {
             Character character = player.characters.get(i); // Récupération du personnage
-
             // Positionnement et affichage du personnage
             if (character.isAlive()) {
-                g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - character.idle.getWidth())/2,
-                            character.getPosY() * aff.res + (aff.res - character.idle.getHeight())/2, null);
+                if (character.idle.getWidth() >= character.idle.getHeight()) {
+                    imgWidth = aff.res;
+                    imgHeight = (character.idle.getHeight() * aff.res) / character.idle.getWidth();
+                } else {
+                    imgHeight = aff.res;
+                    imgWidth = (character.idle.getWidth() * aff.res) / character.idle.getHeight();
+                }
+
+                g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - imgWidth)/2,
+                                            character.getPosY() * aff.res + (aff.res - imgHeight)/2,
+                            imgWidth, imgHeight, null);
             }
         }
     }
