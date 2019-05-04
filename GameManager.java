@@ -2,12 +2,12 @@ import java.util.Arrays.*;
 
 public class GameManager {
     private static Display aff; // Référence à l'objet d'affichage
-    public static int[][] overlay;
+    public static int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
     public static int mapX = 15; // Nombre de colonnes de la map
     public static int mapY = 10; // Nombre de lignes de la map
-    public static Player[] players;
-
-    public static Character selectedChar;
+    public static boolean gameOver = false; // Vrai lorsque la partie est finie
+    public static Player[] players; // Liste de joueurs
+    public static Character selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
 
     /*
         tour%2 = 0 => Joueur 1
@@ -23,7 +23,6 @@ public class GameManager {
     */
 
     public static int step;
-    public static boolean gameOver = false;
 
     public GameManager() {
         tour = 0;
@@ -36,13 +35,13 @@ public class GameManager {
 
         players[0].addChar("Berserker", "Berserker", 11, 1, 20,  6,  50,  1,  2,  10,  3);
         players[0].addChar("Sniper", "Sniper", 10, 5, 1, 10, 5, 3, 5, 10, 3);
-
         players[1].addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
 
-        overlay = new int[mapY][mapX];
-        aff = new Display(this);
 
-        setupCharSelect();
+        overlay = new int[mapY][mapX];
+        aff = new Display(this); // Instanciation de la classe d'affichage
+
+        setupCharSelect(); // Déclenchement du jeu en initialisant le premier tour
         aff.mapPanel.repaint();
 
     }
@@ -64,11 +63,11 @@ public class GameManager {
 
     /**** SELECTION DU PERSONNAGE ****/
     public static void charSelect(int x, int y) {
-        if (overlay[y][x] == 1) {
-            selectedChar = findChar(x, y, players[tour%2]);
+        if (overlay[y][x] == 1) { // Si la case cliquée est effectivement un personnage
+            selectedChar = findChar(x, y, players[tour%2]); // Recherche le personnage positionné sur la case (x,y)
             step = 1;
 
-            setupMoveSelect();
+            setupMoveSelect(); // Setup de l'étape suivante
             aff.mapPanel.repaint();
         }
     }
@@ -87,7 +86,7 @@ public class GameManager {
                 System.out.println(character);
             }
 
-            if (counter == 0) {
+            if (counter == 0) { // Si il n'y a plus aucun personnage vivant, la partie est terminée
                 gameOver = true;
                 System.out.println("Partie terminée");
                 aff.changeMessage("Partie terminée");

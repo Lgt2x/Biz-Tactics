@@ -68,11 +68,8 @@ java Launch
 Objectifs à court terme
 
 - Affichage de tiles à la place des rectangles
-- les deux joueurs sous forme de liste, plus facile à manipuler
-- Adaptation de la taille des sprites à la taille de l'écran (difficile)
-- Implémentation d'un système de tours
-- Affichage des personnages sélectionnables
-- Affichage des cases de déplacement possibles
-- Changement de couleur de la case au survol
-- Déplacement du personnage selon la case sélectionnée
-- Sélection du personnage à attaquer
+- Adaptation de la taille des sprites à la taille de l'écran
+- Changement de couleur de la case au survol pour le déplacement
+- Attaque ou déplacement impossible si un autre personnage est devant l'objectif
+- Message dans le JLabel qui change en fonction de l'action effectuée/à effectuer
+- Obstacles sur la map
