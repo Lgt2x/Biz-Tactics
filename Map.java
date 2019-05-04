@@ -96,8 +96,8 @@ public class Map extends JPanel {
         Graphics gw = worldImage.getGraphics(); // Espace de dessin
 
         drawTiles(gw);
-        drawChars(gw, gm.player1);
-        //drawChars(gw, gm.player2);
+        drawChars(gw, gm.players[0]);
+        drawChars(gw, gm.players[1]);
 
         g.drawImage(worldImage, 0, 0, null); // Affichage de l'image créée sur le Panel
     }

@@ -5,14 +5,13 @@ public class GameManager {
     public static int[][] overlay;
     public static int mapX = 15; // Nombre de colonnes de la map
     public static int mapY = 10; // Nombre de lignes de la map
-    public static Player player1;
-    public static Player player2;
+    public static Player[] players;
 
-    public Character selectedChar;
+    public static Character selectedChar;
 
     /*
-        tour%2 = 1 => Joueur 1
-        tour%2 = 0 => Joueur 2
+        tour%2 = 0 => Joueur 1
+        tour%2 = 1 => Joueur 2
     */
 
     public static int tour;
@@ -26,16 +25,18 @@ public class GameManager {
     public static int etape;
 
     public GameManager() {
-        tour = 1;
+        tour = 0;
         etape = 0;
 
-        player1 = new Player("Player 1");
-        player2 = new Player("Player 2");
+        players = new Player[] {
+            new Player("Player 1"),
+            new Player("Player 2")
+        };
 
-        player1.addChar("Berserker", "Berserker", 1, 1, 20,  6,  5,  1,  2,  10,  3);
-        player1.addChar("Sniper", "Sniper", 1, 5, 1, 10, 5, 3, 5, 10, 3);
+        players[0].addChar("Berserker", "Berserker", 1, 1, 20,  6,  5,  1,  2,  10,  3);
+        players[0].addChar("Sniper", "Sniper", 1, 5, 1, 10, 5, 3, 5, 10, 3);
 
-        player2.addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
+        players[1].addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
 
         overlay = new int[mapY][mapX];
         aff = new Display(this);
@@ -59,26 +60,22 @@ public class GameManager {
 
     /**** SELECTION DU PERSONNAGE ****/
     public static void charSelect(int x, int y) {
-        if (overlay[x][y] == 1) {
-            selectedChar = findChar(x,y);
-
+        if (overlay[y][x] == 1) {
+            selectedChar = findChar(x,y, players[tour%2]);
             etape++;
-        }
 
-        setupMoveSelect();
+            setupMoveSelect();
+        }
     }
 
     public static void setupCharSelect() {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
+        Character character;
 
-        if (tour%2 == 1) { // Si c'est au joueur 1
-            for (int i = 0; i < player1.characters.size(); i++) {
-                Character character = player1.characters.get(i);
-
-                overlay[character.getPosY()][character.getPosX()] = 1;
-                System.out.println(overlay.toString());
-                aff.mapPanel.repaint();
-            }
+        for (int i = 0; i < players[tour%2].characters.size(); i++) {
+            character = players[tour%2].characters.get(i);
+            overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
+            aff.mapPanel.repaint();
         }
     }
 
@@ -90,6 +87,11 @@ public class GameManager {
 
     public static void setupMoveSelect() {
         cleanOverlay();
+
+        overlay [selectedChar.getPosY()][selectedChar.getPosX()] = 1;
+        aff.mapPanel.repaint();
+
+
     }
 
     /**** SELECTION DU PERSONNAGE ATTAQUE ****/
@@ -104,7 +106,18 @@ public class GameManager {
     /*
     Cherche si un personnage existe sur cette case
     */
-    //public static Character findChar(int x, int y)
+    public static Character findChar (int x, int y, Player player) {
+        Character character;
+        for (int i = 0; i < player.characters.size(); i++) {
+            character = player.characters.get(i);
+
+            if (character.getPosX() == x && character.getPosY() == y) {
+                return character;
+            }
+        }
+
+        return null;
+    }
 
     /*
     Nettoie l'overlay
