@@ -17,24 +17,24 @@ public class GameManager {
     public static int tour;
 
     /*
-        etape%3 = 0 => Sélection du personnage à jouer
-        etape%3 = 1 => Sélection de la case de déplacement
-        etape%3 = 2 => Sélection du personnage à attaquer
+        step%3 = 0 => Sélection du personnage à jouer
+        step%3 = 1 => Sélection de la case de déplacement
+        step%3 = 2 => Sélection du personnage à attaquer
     */
 
-    public static int etape;
+    public static int step;
 
     public GameManager() {
         tour = 0;
-        etape = 0;
+        step = 0;
 
         players = new Player[] {
             new Player("Player 1"),
             new Player("Player 2")
         };
 
-        players[0].addChar("Berserker", "Berserker", 1, 1, 20,  6,  5,  1,  2,  10,  3);
-        players[0].addChar("Sniper", "Sniper", 1, 5, 1, 10, 5, 3, 5, 10, 3);
+        players[0].addChar("Berserker", "Berserker", 11, 1, 20,  6,  5,  1,  2,  10,  3);
+        players[0].addChar("Sniper", "Sniper", 10, 5, 1, 10, 5, 3, 5, 10, 3);
 
         players[1].addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
 
@@ -42,6 +42,7 @@ public class GameManager {
         aff = new Display(this);
 
         setupCharSelect();
+        aff.mapPanel.repaint();
 
     }
 
@@ -49,11 +50,11 @@ public class GameManager {
      * Méthode déclenchée au clic sur une case, déclenchée par le gestionnaire d'events de la Map
     */
     public static void clickHandle(int x, int y) {
-        if (etape%3 == 0) {
+        if (step%3 == 0) {
             charSelect(x, y);
-        } else if (etape%3 == 1) {
+        } else if (step%3 == 1) {
             moveSelect(x,y);
-        } else if (etape%3 ==2) {
+        } else if (step%3 == 2) {
             attackSelect(x,y);
         }
     }
@@ -61,10 +62,11 @@ public class GameManager {
     /**** SELECTION DU PERSONNAGE ****/
     public static void charSelect(int x, int y) {
         if (overlay[y][x] == 1) {
-            selectedChar = findChar(x,y, players[tour%2]);
-            etape++;
+            selectedChar = findChar(x, y, players[tour%2]);
+            step = 1;
 
             setupMoveSelect();
+            aff.mapPanel.repaint();
         }
     }
 
@@ -75,31 +77,77 @@ public class GameManager {
         for (int i = 0; i < players[tour%2].characters.size(); i++) {
             character = players[tour%2].characters.get(i);
             overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
-            aff.mapPanel.repaint();
         }
     }
 
     /**** SELECTION DU MOUVEMENT ****/
     public static void moveSelect(int x, int y) {
+        if (overlay[y][x] == 2) {
+            selectedChar.moveTo(x, y);
+            aff.repaint();
+            step = 2;
 
+            setupAttackSelect();
+        }
     }
 
 
     public static void setupMoveSelect() {
         cleanOverlay();
+        int x;
+        int y;
 
         overlay [selectedChar.getPosY()][selectedChar.getPosX()] = 1;
+
+        for (int offsetX = -selectedChar.speed; offsetX <= selectedChar.speed; offsetX++) {
+            for (int offsetY = Math.abs(offsetX) - selectedChar.speed; offsetY <= -Math.abs(offsetX) + selectedChar.speed; offsetY++) {
+
+                x = selectedChar.getPosX()+offsetX;
+                y = selectedChar.getPosY()+offsetY;
+
+                if (x >= 0 && x < mapX && y >= 0 && y < mapY && findChar(x, y, players[(tour+1)%2]) == null && findChar(x, y, players[tour%2]) == null) { // && !(x == 0 && y == 0)
+                    overlay[y][x] = 2;
+                }
+            }
+        }
+
         aff.mapPanel.repaint();
-
-
     }
 
     /**** SELECTION DU PERSONNAGE ATTAQUE ****/
     public static void attackSelect(int x, int y) {
+        if (overlay[y][x] == 4) {
+            Character adversary = findChar(x, y, players[(tour+1)%2]);
+            selectedChar.attack(adversary);
 
+            step = 0;
+            tour++;
+
+            aff.changeMessage("Attaqué");
+
+            setupCharSelect();
+        }
     }
 
     public static void setupAttackSelect() {
+        cleanOverlay();
+
+        int x;
+        int y;
+
+        for (int offsetX = -selectedChar.range; offsetX <= selectedChar.range; offsetX++) {
+            for (int offsetY = Math.abs(offsetX) - selectedChar.range; offsetY <= -Math.abs(offsetX) + selectedChar.range; offsetY++) {
+                x = selectedChar.getPosX()+offsetX;
+                y = selectedChar.getPosY()+offsetY;
+
+                if (x >= 0 && x < mapX && y >= 0 && y < mapY && findChar(x, y, players[(tour+1)%2]) != null) {
+                    overlay[y][x] = 4;
+                }
+            }
+        }
+
+        aff.mapPanel.repaint();
+
 
     }
 
