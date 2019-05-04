@@ -15,10 +15,10 @@ public class Map extends JPanel {
     private BufferedImage worldImage; // Espace de dessin
 
     // Définition des constantes de couleur
-    private static int opacity = 80;
+    private static int opacity = 60;
     private static Color[] colors = new Color[] {
         new Color(255, 255, 255, opacity),  // 0: blanc
-        new Color (0, 204, 0, opacity),     // 1: vert de sélection de personnage
+        new Color (255, 204, 0, opacity),     // 1: jaune de sélection de personnage
         new Color (153, 204, 255, opacity), // 2: bleu de possibilité de déplacement
         new Color (0, 102, 255, opacity),   // 3: bleu, déplacement possible au survol de la souris
         new Color (204, 51, 0, opacity)     // 4: rouge, attaque possible d'un ennemi
@@ -27,6 +27,8 @@ public class Map extends JPanel {
     private static int caseHoveredX = 0;
     private static int caseHoveredY = 0;
 
+    private static BufferedImage[] backgroundPics;
+
     public Map(Display aff, GameManager gm) {
         this.aff = aff;
         this.gm = gm;
@@ -34,7 +36,14 @@ public class Map extends JPanel {
         worldImage = new BufferedImage(aff.res * gm.mapX, aff.res * gm.mapY, BufferedImage.TYPE_INT_RGB);
         setPreferredSize(new Dimension(aff.res * gm.mapX, aff.res * gm.mapY));
 
-
+        try {
+            backgroundPics = new BufferedImage[] {
+                ImageIO.read(new File("Assets/Background/grass.png")),
+                ImageIO.read(new File("Assets/Background/rock.png"))
+            };
+        } catch (IOException e) {
+            System.out.println("Erreur de chargement de l'image");
+        }
 
         // Ajout d'un récepteur d'évenement
         addMouseListener(new MouseAdapter(){
@@ -78,11 +87,7 @@ public class Map extends JPanel {
         });;
     }
 
-    private void drawTiles(Graphics g) {
-
-        g.setColor(Color.WHITE); // Couleur de fond
-        g.fillRect(0, 0, aff.res * gm.mapX, aff.res * gm.mapY); // Remplissage
-
+    private void drawOverlay(Graphics g) {
         /*
 
             COULEURS
@@ -93,17 +98,25 @@ public class Map extends JPanel {
 
         */
 
-        for (int i = 0; i < gm.mapY; i++) {
-            for (int j = 0; j < gm.mapX; j++) {
-                fillTile(i, j, gm.overlay[i][j], g);
+        for (int y = 0; y < gm.mapY; y++) {
+            for (int x = 0; x < gm.mapX; x++) {
+                fillTile(x, y, gm.overlay[y][x], g);
             }
         }
     }
 
-    private void fillTile(int y, int x, int couleur, Graphics g) {
-        if (y >= 0 && y < gm.mapY && x >= 0 && x < gm.mapX) {
+    private void fillTile(int x, int y, int couleur, Graphics g) {
+        if (y >= 0 && y < gm.mapY && x >= 0 && x < gm.mapX && couleur != 0) {
             g.setColor(colors[couleur]);
             g.fillRect(aff.res * x, aff.res * y, aff.res, aff.res);
+        }
+    }
+
+    private void drawBackground(Graphics g) {
+        for (int y = 0; y < gm.mapY; y++) {
+            for (int x = 0; x < gm.mapX; x++) {
+                g.drawImage(backgroundPics[gm.background[y][x]], x * aff.res, y * aff.res, aff.res, aff.res, null);
+            }
         }
     }
 
@@ -133,7 +146,9 @@ public class Map extends JPanel {
     public void paint(Graphics g) {
         Graphics gw = worldImage.getGraphics(); // Espace de dessin
 
-        drawTiles(gw);
+        drawBackground(gw);
+        drawOverlay(gw);
+
         drawChars(gw, gm.players[0]);
         drawChars(gw, gm.players[1]);
 

@@ -5,6 +5,8 @@ public class GameManager {
     public static int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
     public static int mapX = 15; // Nombre de colonnes de la map
     public static int mapY = 10; // Nombre de lignes de la map
+    public static int[][] background; // Fond, avec ses obstacles
+
     public static boolean gameOver = false; // Vrai lorsque la partie est finie
     public static Player[] players; // Liste de joueurs
     public static Character selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
@@ -39,6 +41,11 @@ public class GameManager {
 
 
         overlay = new int[mapY][mapX];
+        background = new int[mapY][mapX];
+
+        background[1][1] = 1;
+        background[2][10] = 1;
+
         aff = new Display(this); // Instanciation de la classe d'affichage
 
         setupCharSelect(); // Déclenchement du jeu en initialisant le premier tour

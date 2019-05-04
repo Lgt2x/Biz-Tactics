@@ -65,9 +65,13 @@ java Launch
 
 ## Todo
 
-Objectifs à court terme
+Objectifs à court terme (10 mins à 2h)
 
-- Affichage de tiles à la place des rectangles
-- Attaque ou déplacement impossible si un autre personnage est devant l'objectif
 - Message dans le JLabel qui change en fonction de l'action effectuée/à effectuer
+- Affichage de tiles à la place des rectangles
 - Obstacles sur la map
+- Chargement de la map depuis un ficher texte
+- Attaque ou déplacement impossible si un autre personnage est devant l'objectif
+- Barre de HP au dessus des personnages
+- Animation pour l'attaque
+- Chargement des caractéristiques selon chaque type
