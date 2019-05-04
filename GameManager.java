@@ -23,6 +23,7 @@ public class GameManager {
     */
 
     public static int step;
+    public static boolean gameOver = false;
 
     public GameManager() {
         tour = 0;
@@ -33,7 +34,7 @@ public class GameManager {
             new Player("Player 2")
         };
 
-        players[0].addChar("Berserker", "Berserker", 11, 1, 20,  6,  5,  1,  2,  10,  3);
+        players[0].addChar("Berserker", "Berserker", 11, 1, 20,  6,  50,  1,  2,  10,  3);
         players[0].addChar("Sniper", "Sniper", 10, 5, 1, 10, 5, 3, 5, 10, 3);
 
         players[1].addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
@@ -50,12 +51,14 @@ public class GameManager {
      * Méthode déclenchée au clic sur une case, déclenchée par le gestionnaire d'events de la Map
     */
     public static void clickHandle(int x, int y) {
-        if (step%3 == 0) {
-            charSelect(x, y);
-        } else if (step%3 == 1) {
-            moveSelect(x,y);
-        } else if (step%3 == 2) {
-            attackSelect(x,y);
+        if (!gameOver) {
+            if (step%3 == 0) {
+                charSelect(x, y);
+            } else if (step%3 == 1) {
+                moveSelect(x,y);
+            } else if (step%3 == 2) {
+                attackSelect(x,y);
+            }
         }
     }
 
@@ -72,11 +75,23 @@ public class GameManager {
 
     public static void setupCharSelect() {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
+
         Character character;
+        int counter = 0;
 
         for (int i = 0; i < players[tour%2].characters.size(); i++) {
             character = players[tour%2].characters.get(i);
-            overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
+            if (character.isAlive()) {
+                overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
+                counter++;
+                System.out.println(character);
+            }
+
+            if (counter == 0) {
+                gameOver = true;
+                System.out.println("Partie terminée");
+                aff.changeMessage("Partie terminée");
+            }
         }
     }
 
@@ -134,6 +149,7 @@ public class GameManager {
 
         int x;
         int y;
+        int counter = 0;
 
         for (int offsetX = -selectedChar.range; offsetX <= selectedChar.range; offsetX++) {
             for (int offsetY = Math.abs(offsetX) - selectedChar.range; offsetY <= -Math.abs(offsetX) + selectedChar.range; offsetY++) {
@@ -142,13 +158,17 @@ public class GameManager {
 
                 if (x >= 0 && x < mapX && y >= 0 && y < mapY && findChar(x, y, players[(tour+1)%2]) != null) {
                     overlay[y][x] = 4;
+                    counter++;
                 }
             }
         }
 
+        if (counter == 0) { // Si il n'y a personne à attaquer
+            step = 0;
+            tour++;
+            setupCharSelect();
+        }
         aff.mapPanel.repaint();
-
-
     }
 
     /*

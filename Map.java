@@ -87,8 +87,10 @@ public class Map extends JPanel {
             Character character = player.characters.get(i); // Récupération du personnage
 
             // Positionnement et affichage du personnage
-            g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - character.idle.getWidth())/2,
-                        character.getPosY() * aff.res + (aff.res - character.idle.getHeight())/2, null);
+            if (character.isAlive()) {
+                g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - character.idle.getWidth())/2,
+                            character.getPosY() * aff.res + (aff.res - character.idle.getHeight())/2, null);
+            }
         }
     }
 

@@ -58,6 +58,10 @@ public class Character{
 
 	public void weaken(int damage){
 		this.hp -= damage;
+
+		if (this.hp <= 0) {
+			this.alive = false;
+		}
 	}
 
 	public void attack(Character adversary){
@@ -72,7 +76,7 @@ public class Character{
 		/*
 		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats
 		*/
-		
+
 		adversary.weaken(damage);
 	}
 
