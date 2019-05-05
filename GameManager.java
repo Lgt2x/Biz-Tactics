@@ -1,6 +1,13 @@
-import java.util.Arrays.*;
+import java.util.Arrays;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class GameManager {
+    private static int selectedMap = 0;
+
     private static Display aff; // Référence à l'objet d'affichage
     public static int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
     public static int mapX = 15; // Nombre de colonnes de la map
@@ -39,12 +46,23 @@ public class GameManager {
         players[0].addChar("Sniper", "Sniper", 10, 5, 1, 10, 5, 3, 5, 10, 3);
         players[1].addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
 
+        BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
-        overlay = new int[mapY][mapX];
+        mapX = backgroundLoaded.sizeX;
+        mapY = backgroundLoaded.sizeY;
+
         background = new int[mapY][mapX];
+        overlay = new int[mapY][mapX];
 
-        background[1][1] = 1;
-        background[2][10] = 1;
+        for (int y = 0; y<mapY; y++) {
+            for (int x = 0; x<mapX; x++) {
+                background[y][x] = backgroundLoaded.map.get(y).charAt(x) - '0';
+                /* charAt donne une représentation UTF-16 du caractère,
+                 * si on y soustrait la valeur ASCII du caractère 0 (48),
+                 * on trouve bien le chiffre que l'on veut de la chaine
+                */
+            }
+        }
 
         aff = new Display(this); // Instanciation de la classe d'affichage
 
@@ -58,12 +76,19 @@ public class GameManager {
     */
     public static void clickHandle(int x, int y) {
         if (!gameOver) {
-            if (step%3 == 0) {
-                charSelect(x, y);
-            } else if (step%3 == 1) {
-                moveSelect(x,y);
-            } else if (step%3 == 2) {
-                attackSelect(x,y);
+            switch (step%3) {
+                case 0:
+                    charSelect(x, y);
+                    break;
+                case 1:
+                    moveSelect(x,y);
+                    break;
+                case 2:
+                    attackSelect(x,y);
+                    break;
+                default:
+                    System.out.println("Erreur");
+
             }
         }
     }
@@ -200,6 +225,18 @@ public class GameManager {
                 overlay[i][j] = 0;
             }
         }
+    }
+
+    public static BackgroundLoader loadMap(int map) {
+        try {
+            Gson gson = new Gson();
+            BackgroundLoader[] backgrounds = gson.fromJson(new FileReader("Assets/maps.json"), BackgroundLoader[].class);
+            return backgrounds[map];
+        } catch (FileNotFoundException e) {
+            System.out.println("Erreur de chargement de la map");
+        }
+
+        return null;
     }
 
     public static void pause(int ms) {

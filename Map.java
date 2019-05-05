@@ -63,7 +63,7 @@ public class Map extends JPanel {
                 repaint(); // Recalcul des éléments du canvas mis à jour
             }
         });
-
+        
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
