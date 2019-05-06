@@ -8,8 +8,8 @@ import com.google.gson.GsonBuilder;
 
 public class Player{
 
-	private String name;
-	public ArrayList<Character> characters; // A voir pour faire un ArrayList à la place
+	public String name;
+	public ArrayList<Character> characters; // Tableau des personnages du joueur
 
 	public Player(String name) {
 		characters = new ArrayList<Character>();
@@ -21,8 +21,11 @@ public class Player{
 
 	public void addChar (String name, String type, int posX, int posY) {
 		try {
-            Gson gson = new Gson();
+            Gson gson = new Gson(); // Deserializer Json
+
+			// Transpose le json en objet contenant les stats d'un type de personnage jouable
             CharLoader loader = gson.fromJson(new FileReader("Assets/charStats/" + type + ".json"), CharLoader.class);
+
 			characters.add(new Character(
 				name,
 				posX,
@@ -36,6 +39,7 @@ public class Player{
 				loader.precision,
 				loader.speed
 			));
+			
         } catch (FileNotFoundException e) {
             System.out.println("Erreur de chargement de la map");
         }

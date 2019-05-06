@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.Scanner;
 
 public class GameManager {
     private static int selectedMap = 0;
@@ -42,12 +43,11 @@ public class GameManager {
             new Player("Player 2")
         };
 
-        try {
-            Gson gson = new Gson();
-            statsCharacter character1 = gson.fromJson(new FileReader("Assets/charStats/Berserker.json"), statsCharacter.class);
-        } catch (FileNotFoundException e) {
-            System.out.println("Erreur de chargement de la map");
-        }
+        Scanner sc = new Scanner (System.in);
+
+        System.out.println("Quels noms?");
+        players[0].name = sc.nextLine();
+        players[1].name = sc.nextLine();
 
         players[0].addChar("Perso1", "Berserker", 11, 1);
         players[0].addChar("Perso1.2", "Sniper", 10, 5);
@@ -126,25 +126,30 @@ public class GameManager {
 
             if (counter == 0) { // Si il n'y a plus aucun personnage vivant, la partie est terminée
                 gameOver = true;
-                aff.changeMessage("Partie terminée");
+                aff.changeMessage("Jeu terminé : " + players[(tour+1)%2].name + " WINS");
+                return;
             }
+
+            aff.changeMessage(players[tour%2].name + " : quel personnage bouger?");
         }
     }
 
+
     /**** SELECTION DU MOUVEMENT ****/
     public static void moveSelect(int x, int y) {
-        if (overlay[y][x] == 2 || overlay[y][x] == 3) {
-            selectedChar.moveTo(x, y);
-            aff.repaint();
-            step = 2;
+        if (overlay[y][x] == 2 || overlay[y][x] == 3) { // Si le déplacement est possible vers la case sélectionnée
+            selectedChar.moveTo(x, y); // Déplacement du personnage
+            aff.repaint(); // Update de l'affichage
 
-            setupAttackSelect();
+            step = 2; // Passage à l'étape suivante
+            setupAttackSelect(); // Setup de l'étape suivante
         }
     }
 
 
     public static void setupMoveSelect() {
         cleanOverlay();
+
         int x;
         int y;
 
@@ -154,27 +159,30 @@ public class GameManager {
                 x = selectedChar.getPosX()+offsetX;
                 y = selectedChar.getPosY()+offsetY;
 
-                if (x >= 0 && x < mapX && y >= 0 && y < mapY && findChar(x, y, players[(tour+1)%2]) == null && findChar(x, y, players[tour%2]) == null) { // && !(x == 0 && y == 0)
-                    overlay[y][x] = 2;
+                if (x >= 0 && x < mapX
+					&& y >= 0 && y < mapY
+					&& findChar(x, y, players[(tour+1)%2]) == null // Vérification s'il n'y a pas de personnage ennemi sur la case de déplacement
+					&& findChar(x, y, players[tour%2]) == null // Pas de personnage allié non plus
+					&& background[y][x] == 0) { // Si c'est bien une case d'herbe
+                        overlay[y][x] = 2; // La case devient bleue
                 }
             }
         }
 
-        overlay [selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
+        overlay[selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
 
         aff.mapPanel.repaint();
     }
 
+
     /**** SELECTION DU PERSONNAGE ATTAQUE ****/
     public static void attackSelect(int x, int y) {
         if (overlay[y][x] == 4) {
-            Character adversary = findChar(x, y, players[(tour+1)%2]);
+            Character adversary = findChar(x, y, players[(tour+1)%2]); // Recherche du personnage ennemi placé sur la case sélectionné
             selectedChar.attack(adversary);
 
-            step = 0;
-            tour++;
-
-            aff.changeMessage("Attaqué");
+            step = 0; // Retour à la première étape
+            tour++; // Au tour adverse
 
             setupCharSelect();
         }
@@ -192,18 +200,20 @@ public class GameManager {
                 x = selectedChar.getPosX()+offsetX;
                 y = selectedChar.getPosY()+offsetY;
 
-                if (x >= 0 && x < mapX && y >= 0 && y < mapY && findChar(x, y, players[(tour+1)%2]) != null) {
+                if (x >= 0 && x < mapX && y >= 0 && y < mapY
+                    && findChar(x, y, players[(tour+1)%2]) != null) {
                     overlay[y][x] = 4;
                     counter++;
                 }
             }
         }
 
-        if (counter == 0) { // Si il n'y a personne à attaquer
+        if (counter == 0) { // Si il n'y a personne à attaquer, passage à l'étape suivante
             step = 0;
             tour++;
             setupCharSelect();
         }
+        
         aff.mapPanel.repaint();
     }
 

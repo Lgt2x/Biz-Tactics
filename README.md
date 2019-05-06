@@ -73,9 +73,9 @@ java -cp ".;libs/gson-2.8.5.jar" Launch
 
 Objectifs à court terme (10 mins à 2h)
 
-- Message dans le JLabel qui change en fonction de l'action effectuée/à effectuer
-- Prise en compte des obstacles sur la map
-- Chargement des caractéristiques selon chaque type
-- Attaque ou déplacement impossible si un autre personnage est devant l'objectif
+- Passage sous Gradle avec une structure plus propre
+- Calcul des cases possibles de déplacement et d'attaque selon la distance (difficile)
 - Barre de HP au dessus des personnages
 - Animation pour l'attaque
+- Animation pour le déplacement
+- Equilibrage du jeu
