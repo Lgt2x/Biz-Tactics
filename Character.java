@@ -16,7 +16,7 @@ public class Character{
 	public int hpMax; // Points de vie totaux
 	public int mp; // Points de magie restants
 	public int mpMax; // Points de vie totaux
-	public int def; // Points de défense/bouclier
+	public int defense; // Points de défense/bouclier
 	public int attack; // Points de dégats moyen
 
 	public int range; // Portée d'attaque en nb de cases
@@ -25,7 +25,7 @@ public class Character{
 
 	public BufferedImage idle;
 
-	public Character(String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision){
+	public Character(String name, int posX, int posY, String type, int hp, int mp, int defense, int attack, int range, int precision, int speed){
 		this.name = name;
 		this.type = type;
 		this.alive = true;
@@ -37,7 +37,7 @@ public class Character{
 		this.hpMax = hp;
 		this.mp = mp;
 		this.mpMax = mp;
-		this.def = def;
+		this.defense = defense;
 
 		this.attack = attack;
 		this.range = range;
@@ -46,7 +46,6 @@ public class Character{
 
 		try {
 			idle = ImageIO.read(new File("Assets/" + this.type +"/idle.png"));
-			//System.out.println(idle);
 		} catch (IOException e) {
 			System.out.println("Image non trouvée");
 		}
@@ -70,7 +69,7 @@ public class Character{
 		/*
 		Ta formule empêche la compilation, à revoir...
 
-		int damage = (this.attack*4 - adversary.def*2) * (1 - (100-this.precision)/100 * (0.5 + (int)(Math.random())));
+		int damage = (this.attack*4 - adversary.defense*2) * (1 - (100-this.precision)/100 * (0.5 + (int)(Math.random())));
 		*/
 
 		/*

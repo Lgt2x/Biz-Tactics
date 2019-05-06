@@ -1,4 +1,10 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Player{
 
@@ -13,8 +19,26 @@ public class Player{
 		return name;
 	}
 
-	public void addChar (String name, String type, int posX, int posY, int hp, int def, int attack, int range, int speed, int mp, int precision) {
-		characters.add(new Character(name, type, posX, posY, hp,  def,  attack,  range,  speed,  mp,  precision));
+	public void addChar (String name, String type, int posX, int posY) {
+		try {
+            Gson gson = new Gson();
+            CharLoader loader = gson.fromJson(new FileReader("Assets/charStats/" + type + ".json"), CharLoader.class);
+			characters.add(new Character(
+				name,
+				posX,
+				posY,
+				loader.type,
+				loader.hp,
+				loader.mp,
+				loader.defense,
+				loader.attack,
+				loader.range,
+				loader.precision,
+				loader.speed
+			));
+        } catch (FileNotFoundException e) {
+            System.out.println("Erreur de chargement de la map");
+        }
 	}
 
 	public boolean isDed () {

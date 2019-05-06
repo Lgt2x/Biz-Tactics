@@ -1,0 +1,10 @@
+{
+	"type": "Berserker",
+	"hp": 50,
+	"mp": 10,
+	"defense": 20,
+	"attack": 20,
+	"range": 2,
+	"speed": 3,
+	"precision": 5
+}

@@ -42,9 +42,16 @@ public class GameManager {
             new Player("Player 2")
         };
 
-        players[0].addChar("Berserker", "Berserker", 11, 1, 20,  6,  50,  1,  2,  10,  3);
-        players[0].addChar("Sniper", "Sniper", 10, 5, 1, 10, 5, 3, 5, 10, 3);
-        players[1].addChar("Knight", "Knight", 13, 1, 30, 10, 3, 1, 1, 10, 1);
+        try {
+            Gson gson = new Gson();
+            statsCharacter character1 = gson.fromJson(new FileReader("Assets/charStats/Berserker.json"), statsCharacter.class);
+        } catch (FileNotFoundException e) {
+            System.out.println("Erreur de chargement de la map");
+        }
+
+        players[0].addChar("Perso1", "Berserker", 11, 1);
+        players[0].addChar("Perso1.2", "Sniper", 10, 5);
+        players[1].addChar("Perso2", "Knight", 13, 1);
 
         BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
