@@ -167,6 +167,10 @@ public class GameManager {
                         overlay[y][x] = 2; // La case devient bleue
                 }
             }
+
+            aff.changeMessage(players[tour%2].name + " : où bouger le personnage?");
+
+
         }
 
         overlay[selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
@@ -207,6 +211,8 @@ public class GameManager {
                 }
             }
         }
+
+        aff.changeMessage(players[tour%2].name + " : quel personnage attaquer?");
 
         if (counter == 0) { // Si il n'y a personne à attaquer, passage à l'étape suivante
             step = 0;

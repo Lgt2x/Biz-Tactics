@@ -39,7 +39,7 @@ public class Player{
 				loader.precision,
 				loader.speed
 			));
-			
+
         } catch (FileNotFoundException e) {
             System.out.println("Erreur de chargement de la map");
         }

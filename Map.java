@@ -57,7 +57,6 @@ public class Map extends JPanel {
 
                 gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
 
-                aff.changeMessage(caseX + " " + caseY); // On change le message pour afficher la case
                 //gm.overlay[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
 
                 repaint(); // Recalcul des éléments du canvas mis à jour
