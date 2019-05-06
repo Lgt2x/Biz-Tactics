@@ -7,24 +7,24 @@ import com.google.gson.GsonBuilder;
 import java.util.Scanner;
 
 public class GameManager {
-    private static int selectedMap = 0;
+    private  int selectedMap = 0;
 
-    private static Display aff; // Référence à l'objet d'affichage
-    public static int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
-    public static int mapX = 15; // Nombre de colonnes de la map
-    public static int mapY = 10; // Nombre de lignes de la map
-    public static int[][] background; // Fond, avec ses obstacles
+    private  Display aff; // Référence à l'objet d'affichage
+    public  int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
+    public  int mapX = 15; // Nombre de colonnes de la map
+    public  int mapY = 10; // Nombre de lignes de la map
+    public  int[][] background; // Fond, avec ses obstacles
 
-    public static boolean gameOver = false; // Vrai lorsque la partie est finie
-    public static Player[] players; // Liste de joueurs
-    public static Character selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
+    public  boolean gameOver = false; // Vrai lorsque la partie est finie
+    public  Player[] players; // Liste de joueurs
+    public  Character selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
 
     /*
         tour%2 = 0 => Joueur 1
         tour%2 = 1 => Joueur 2
     */
 
-    public static int tour;
+    public  int tour;
 
     /*
         step%3 = 0 => Sélection du personnage à jouer
@@ -32,7 +32,7 @@ public class GameManager {
         step%3 = 2 => Sélection du personnage à attaquer
     */
 
-    public static int step;
+    public  int step;
 
     public GameManager() {
         tour = 0;
@@ -43,11 +43,11 @@ public class GameManager {
             new Player("Player 2")
         };
 
-        Scanner sc = new Scanner (System.in);
+        /*Scanner sc = new Scanner (System.in);
 
         System.out.println("Quels noms?");
         players[0].name = sc.nextLine();
-        players[1].name = sc.nextLine();
+        players[1].name = sc.nextLine();*/
 
         players[0].addChar("Perso1", "Berserker", 11, 1);
         players[0].addChar("Perso1.2", "Sniper", 10, 5);
@@ -81,7 +81,7 @@ public class GameManager {
     /*
      * Méthode déclenchée au clic sur une case, déclenchée par le gestionnaire d'events de la Map
     */
-    public static void clickHandle(int x, int y) {
+    public  void clickHandle(int x, int y) {
         if (!gameOver) {
             switch (step%3) {
                 case 0:
@@ -101,7 +101,7 @@ public class GameManager {
     }
 
     /**** SELECTION DU PERSONNAGE ****/
-    public static void charSelect(int x, int y) {
+    public  void charSelect(int x, int y) {
         if (overlay[y][x] == 1) { // Si la case cliquée est effectivement un personnage
             selectedChar = findChar(x, y, players[tour%2]); // Recherche le personnage positionné sur la case (x,y)
             step = 1;
@@ -111,7 +111,7 @@ public class GameManager {
         }
     }
 
-    public static void setupCharSelect() {
+    public  void setupCharSelect() {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
 
         Character character;
@@ -136,7 +136,7 @@ public class GameManager {
 
 
     /**** SELECTION DU MOUVEMENT ****/
-    public static void moveSelect(int x, int y) {
+    public  void moveSelect(int x, int y) {
         if (overlay[y][x] == 2 || overlay[y][x] == 3) { // Si le déplacement est possible vers la case sélectionnée
             selectedChar.moveTo(x, y); // Déplacement du personnage
             aff.repaint(); // Update de l'affichage
@@ -147,7 +147,7 @@ public class GameManager {
     }
 
 
-    public static void setupMoveSelect() {
+    public  void setupMoveSelect() {
         cleanOverlay();
 
         int x;
@@ -176,7 +176,7 @@ public class GameManager {
 
 
     /**** SELECTION DU PERSONNAGE ATTAQUE ****/
-    public static void attackSelect(int x, int y) {
+    public  void attackSelect(int x, int y) {
         if (overlay[y][x] == 4) {
             Character adversary = findChar(x, y, players[(tour+1)%2]); // Recherche du personnage ennemi placé sur la case sélectionné
             selectedChar.attack(adversary);
@@ -188,7 +188,7 @@ public class GameManager {
         }
     }
 
-    public static void setupAttackSelect() {
+    public  void setupAttackSelect() {
         cleanOverlay();
 
         int x;
@@ -213,14 +213,14 @@ public class GameManager {
             tour++;
             setupCharSelect();
         }
-        
+
         aff.mapPanel.repaint();
     }
 
     /*
     Cherche si un personnage existe sur cette case
     */
-    public static Character findChar (int x, int y, Player player) {
+    public  Character findChar (int x, int y, Player player) {
         Character character;
         for (int i = 0; i < player.characters.size(); i++) {
             character = player.characters.get(i);
@@ -236,7 +236,7 @@ public class GameManager {
     /*
     Nettoie l'overlay
     */
-    public static void cleanOverlay() {
+    public  void cleanOverlay() {
         for (int i=0; i<mapY; i++) {
             for (int j=0; j<mapX; j++) {
                 overlay[i][j] = 0;
@@ -244,7 +244,7 @@ public class GameManager {
         }
     }
 
-    public static BackgroundLoader loadMap(int map) {
+    public  BackgroundLoader loadMap(int map) {
         try {
             Gson gson = new Gson();
             BackgroundLoader[] backgrounds = gson.fromJson(new FileReader("Assets/maps.json"), BackgroundLoader[].class);
@@ -256,7 +256,7 @@ public class GameManager {
         return null;
     }
 
-    public static void pause(int ms) {
+    public  void pause(int ms) {
         try {
             Thread.sleep(ms);
         } catch(InterruptedException e){}

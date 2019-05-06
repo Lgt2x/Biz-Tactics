@@ -9,19 +9,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Display extends JFrame {
-    private static GameManager gm; // Référence à l'instance du GameManager
 
-    public static Map mapPanel; // Dessin de la map
-    private static JSplitPane splitPane; // Conteneur de tous les panels
-    private static JPanel bottomPanel; // Panel contenant le message
-    private static JLabel message; // Message affiché en bas de l'écran
+    public  Map mapPanel; // Dessin de la map
+    private  JSplitPane splitPane; // Conteneur de tous les panels
+    private  JPanel bottomPanel; // Panel contenant le message
+    private  JLabel message; // Message affiché en bas de l'écran
     private final int messageHeight = 100; // Hauteur du Label
     public int res; // Taille d'un côté d'une case de la map, calculée à partir de la résolution de l'écran
 
     public Display(GameManager gm) {
         super("T-RPG"); // Nom de la fenêtre
-
-        this.gm = gm; // L'objet GameManager se passe lui-même en paramètre
 
         res = calcRes(gm.overlay); // Résolution des cases en px en fonction de la taille de l'écran
         mapPanel = new Map(this, gm); // Grille d'Display, sous forme de classe
@@ -57,7 +54,7 @@ public class Display extends JFrame {
 
     }
 
-    public static int calcRes(int[][] monde) {
+    public  int calcRes(int[][] monde) {
         final double p = .8; // % de la zone utile a occuper
         int resC;
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds(); // Espace dispo de l'écran
@@ -70,7 +67,7 @@ public class Display extends JFrame {
         return resC;
     }
 
-    public static void changeMessage(String m) {
+    public  void changeMessage(String m) {
         message.setText(m);
     }
 

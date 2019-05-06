@@ -10,13 +10,13 @@ import javax.imageio.ImageIO;
 
 public class Map extends JPanel {
 
-    private static Display aff; // Référence à l'objet JFrame d'affichage
-    private static GameManager gm; // Référence à la classe principale
+    private Display aff; // Référence à l'objet JFrame d'affichage
+    private GameManager gm; // Référence à la classe principale
     private BufferedImage worldImage; // Espace de dessin
 
     // Définition des constantes de couleur
-    private static int opacity = 60;
-    private static Color[] colors = new Color[] {
+    private int opacity = 60;
+    private Color[] colors = new Color[] {
         new Color(255, 255, 255, opacity),  // 0: blanc
         new Color (255, 204, 0, opacity),     // 1: jaune de sélection de personnage
         new Color (153, 204, 255, opacity), // 2: bleu de possibilité de déplacement
@@ -24,10 +24,10 @@ public class Map extends JPanel {
         new Color (204, 51, 0, opacity)     // 4: rouge, attaque possible d'un ennemi
     };
 
-    private static int caseHoveredX = 0;
-    private static int caseHoveredY = 0;
+    private int caseHoveredX = 0;
+    private int caseHoveredY = 0;
 
-    private static BufferedImage[] backgroundPics;
+    private BufferedImage[] backgroundPics;
 
     public Map(Display aff, GameManager gm) {
         this.aff = aff;
@@ -52,8 +52,8 @@ public class Map extends JPanel {
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                int caseX = (int)(x/aff.res);
-                int caseY = (int)(y/aff.res);
+                int caseX = x/aff.res;
+                int caseY = y/aff.res;
 
                 gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
 
@@ -63,15 +63,15 @@ public class Map extends JPanel {
                 repaint(); // Recalcul des éléments du canvas mis à jour
             }
         });
-        
+
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                int caseX = (int)(x/aff.res);
-                int caseY = (int)(y/aff.res);
+                int caseX = x/aff.res;
+                int caseY = y/aff.res;
 
                 if (gm.overlay[caseHoveredY][caseHoveredX] == 3)
                     gm.overlay[caseHoveredY][caseHoveredX] = 2;
