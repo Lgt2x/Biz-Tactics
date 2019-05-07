@@ -18,13 +18,15 @@ public class Map extends JPanel {
     private BufferedImage worldImage; // Espace de dessin
 
     // Définition des constantes de couleur
-    private int opacity = 60;
     private Color[] colors = new Color[]{
-            new Color(255, 255, 255, opacity),  // 0: blanc
-            new Color(255, 204, 0, opacity),     // 1: jaune de sélection de personnage
-            new Color(153, 204, 255, opacity), // 2: bleu de possibilité de déplacement
-            new Color(0, 102, 255, opacity),   // 3: bleu, déplacement possible au survol de la souris
-            new Color(204, 51, 0, opacity)     // 4: rouge, attaque possible d'un ennemi
+            new Color(255, 255, 255, 80),  // 0: blanc
+            new Color(255, 204, 0, 80),    // 1: jaune de sélection de personnage
+            new Color(153, 204, 255, 80),  // 2: bleu de possibilité de déplacement
+            new Color(0, 102, 255, 80),    // 3: bleu, déplacement possible au survol de la souris
+            new Color(204, 51, 0, 80),     // 4: rouge, attaque possible d'un ennemi
+            new Color(0, 0, 0, 255),       // 5: noir
+            new Color(255, 255, 255, 255), // 6: blanc
+            new Color(173, 14, 43, 255)    // 7: rouge
     };
 
     private int caseHoveredX = 0;
@@ -145,6 +147,28 @@ public class Map extends JPanel {
                 g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - imgWidth) / 2,
                         character.getPosY() * aff.res + (aff.res - imgHeight) / 2,
                         imgWidth, imgHeight, null);
+
+                g.setColor(colors[5]);
+                g.fillRoundRect(aff.res * character.getPosX(),
+                        (int) (aff.res * (character.getPosY() - 0.2)),
+
+                        aff.res,
+                        (int) (aff.res * 0.2),
+
+                        (int) (aff.res * 0.1),
+                        (int) (aff.res * 0.1));
+
+                g.setColor(colors[7]);
+                g.fillRoundRect((int) (aff.res * (character.getPosX() + 0.1)),
+                        (int) (aff.res * (character.getPosY() - 0.15)),
+
+                        (int)(aff.res * 0.8 * character.hp/character.hpMax),
+                        (int) (aff.res * 0.1),
+
+                        aff.res / 10,
+                        aff.res / 10);
+
+
             }
         }
     }

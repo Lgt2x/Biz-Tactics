@@ -72,8 +72,8 @@ Unix
 
 Objectifs à court terme (10 mins à 2h)
 
-- Barre de HP au dessus des personnages
 - Calcul des cases possibles de déplacement et d'attaque selon la distance (difficile)
 - Animation pour l'attaque
 - Animation pour le déplacement
 - Equilibrage du jeu
+- Définition des couleurs dans une classe, proprement
