@@ -1,3 +1,5 @@
-*.class
-.DS_Store
-Assets/Brut/*
+out/*
+build/*
+src/main/resources/Sprites/Brut/*
+.idea
+.gradle

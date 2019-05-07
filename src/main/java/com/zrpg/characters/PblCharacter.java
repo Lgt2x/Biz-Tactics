@@ -1,9 +1,11 @@
+package com.zrpg.characters;
+
 import java.io.IOException;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-public class Character{
+public class PblCharacter {
 
 	public String name; // Nom du personnage
 	private boolean alive; // Est-ce que le personnage est en vie
@@ -25,7 +27,7 @@ public class Character{
 
 	public BufferedImage idle;
 
-	public Character(String name, int posX, int posY, String type, int hp, int mp, int defense, int attack, int range, int precision, int speed){
+	public PblCharacter(String name, int posX, int posY, String type, int hp, int mp, int defense, int attack, int range, int precision, int speed){
 		this.name = name;
 		this.type = type;
 		this.alive = true;
@@ -45,8 +47,9 @@ public class Character{
 		this.precision = precision;
 
 		try {
-			idle = ImageIO.read(new File("Assets/" + this.type +"/idle.png"));
-		} catch (IOException e) {
+			String filename = "Sprites/"+ this.type + "/idle.png";
+			idle = ImageIO.read(getClass().getClassLoader().getResourceAsStream(filename));
+		} catch (Exception e) {
 			System.out.println("Image non trouvée");
 		}
 	}
@@ -63,7 +66,7 @@ public class Character{
 		}
 	}
 
-	public void attack(Character adversary){
+	public void attack(PblCharacter adversary){
 		int damage = this.attack;
 
 		/*

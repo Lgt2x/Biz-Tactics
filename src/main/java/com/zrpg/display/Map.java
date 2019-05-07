@@ -1,12 +1,15 @@
+package com.zrpg.display;
+
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.awt.event.*;
-import java.io.File;
+
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import com.zrpg.GameManager;
+import com.zrpg.characters.*;
 
 public class Map extends JPanel {
 
@@ -16,12 +19,12 @@ public class Map extends JPanel {
 
     // Définition des constantes de couleur
     private int opacity = 60;
-    private Color[] colors = new Color[] {
-        new Color(255, 255, 255, opacity),  // 0: blanc
-        new Color (255, 204, 0, opacity),     // 1: jaune de sélection de personnage
-        new Color (153, 204, 255, opacity), // 2: bleu de possibilité de déplacement
-        new Color (0, 102, 255, opacity),   // 3: bleu, déplacement possible au survol de la souris
-        new Color (204, 51, 0, opacity)     // 4: rouge, attaque possible d'un ennemi
+    private Color[] colors = new Color[]{
+            new Color(255, 255, 255, opacity),  // 0: blanc
+            new Color(255, 204, 0, opacity),     // 1: jaune de sélection de personnage
+            new Color(153, 204, 255, opacity), // 2: bleu de possibilité de déplacement
+            new Color(0, 102, 255, opacity),   // 3: bleu, déplacement possible au survol de la souris
+            new Color(204, 51, 0, opacity)     // 4: rouge, attaque possible d'un ennemi
     };
 
     private int caseHoveredX = 0;
@@ -37,23 +40,25 @@ public class Map extends JPanel {
         setPreferredSize(new Dimension(aff.res * gm.mapX, aff.res * gm.mapY));
 
         try {
-            backgroundPics = new BufferedImage[] {
-                ImageIO.read(new File("Assets/Background/grass.png")),
-                ImageIO.read(new File("Assets/Background/rock.png"))
+            backgroundPics = new BufferedImage[]{
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/grass.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/rock.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/rock2.png")),
+
             };
         } catch (IOException e) {
-            System.out.println("Erreur de chargement de l'image");
+            System.out.println("Erreur de chargement des images du décor");
         }
 
         // Ajout d'un récepteur d'évenement
-        addMouseListener(new MouseAdapter(){
+        addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){ // Au clic
+            public void mouseClicked(MouseEvent e) { // Au clic
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                int caseX = x/aff.res;
-                int caseY = y/aff.res;
+                int caseX = x / aff.res;
+                int caseY = y / aff.res;
 
                 gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
 
@@ -69,8 +74,8 @@ public class Map extends JPanel {
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                int caseX = x/aff.res;
-                int caseY = y/aff.res;
+                int caseX = x / aff.res;
+                int caseY = y / aff.res;
 
                 if (gm.overlay[caseHoveredY][caseHoveredX] == 3)
                     gm.overlay[caseHoveredY][caseHoveredX] = 2;
@@ -83,7 +88,8 @@ public class Map extends JPanel {
 
                 repaint();
             }
-        });;
+        });
+        ;
     }
 
     private void drawOverlay(Graphics g) {
@@ -124,7 +130,8 @@ public class Map extends JPanel {
         int imgHeight;
 
         for (int i = 0; i < player.characters.size(); i++) {
-            Character character = player.characters.get(i); // Récupération du personnage
+            PblCharacter character = player.characters.get(i); // Récupération du personnage
+
             // Positionnement et affichage du personnage
             if (character.isAlive()) {
                 if (character.idle.getWidth() >= character.idle.getHeight()) {
@@ -135,9 +142,9 @@ public class Map extends JPanel {
                     imgWidth = (character.idle.getWidth() * aff.res) / character.idle.getHeight();
                 }
 
-                g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - imgWidth)/2,
-                                            character.getPosY() * aff.res + (aff.res - imgHeight)/2,
-                            imgWidth, imgHeight, null);
+                g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - imgWidth) / 2,
+                        character.getPosY() * aff.res + (aff.res - imgHeight) / 2,
+                        imgWidth, imgHeight, null);
             }
         }
     }

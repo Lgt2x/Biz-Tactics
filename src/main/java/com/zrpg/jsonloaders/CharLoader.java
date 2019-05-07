@@ -1,3 +1,5 @@
+package com.zrpg.jsonloaders;
+
 public class CharLoader {
     public String type;
     public int hp;

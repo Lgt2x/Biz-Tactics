@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id "application"
+    id "maven"
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+}
+
+group 'x'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+    // JitPack
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.5'
+}
+
+mainClassName = "com.zrpg.Launch"
+group = "EE"
+version = "0.1.0"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+/*
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from javadoc.destinationDir
+}
+*/
+
+shadowJar {
+    archiveFileName = "project-rpg.jar"
+    manifest {
+        attributes "Main-Class": mainClassName
+    }
+}
+
+task copyScripts(type: Copy) {
+
+    from "src/main/scripts"
+    include "*"
+    into "$buildDir/libs"
+}
+
+task play(type: Exec) {
+
+    dependsOn shadowJar
+    dependsOn copyScripts
+
+    workingDir "$buildDir/libs"
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        // Windows
+        commandLine "C:/Windows/System32/cmd.exe", "/C start cmd /C call start.bat"
+	} else {
+		commandLine "pwd"
+	}
+}

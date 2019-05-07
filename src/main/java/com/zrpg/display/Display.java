@@ -1,12 +1,10 @@
+package com.zrpg.display;
+
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+
+
+import com.zrpg.GameManager;
 
 public class Display extends JFrame {
 

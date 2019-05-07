@@ -1,18 +1,19 @@
+package com.zrpg.characters;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.*;
+
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.zrpg.jsonloaders.*;
 
 public class Player{
 
 	public String name;
-	public ArrayList<Character> characters; // Tableau des personnages du joueur
+	public ArrayList<PblCharacter> characters; // Tableau des personnages du joueur
 
 	public Player(String name) {
-		characters = new ArrayList<Character>();
+		characters = new ArrayList<PblCharacter>();
 	}
 
 	public String toString () {
@@ -21,12 +22,14 @@ public class Player{
 
 	public void addChar (String name, String type, int posX, int posY) {
 		try {
-            Gson gson = new Gson(); // Deserializer Json
+			String filename = "Json/charStats/" + type + ".json";
+			InputStream a = getClass().getClassLoader().getResourceAsStream(filename);
+			Gson gson = new Gson(); // Deserializer Json
 
 			// Transpose le json en objet contenant les stats d'un type de personnage jouable
-            CharLoader loader = gson.fromJson(new FileReader("Assets/charStats/" + type + ".json"), CharLoader.class);
+            CharLoader loader = gson.fromJson(new InputStreamReader(a), CharLoader.class);
 
-			characters.add(new Character(
+			characters.add(new PblCharacter(
 				name,
 				posX,
 				posY,
@@ -40,8 +43,8 @@ public class Player{
 				loader.speed
 			));
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Erreur de chargement de la map");
+        } catch (Exception e) {
+            System.out.println("Erreur de chargement du personnage");
         }
 	}
 

@@ -1,10 +1,17 @@
+package com.zrpg;
+
 import java.util.Arrays;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 import java.io.*;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.util.Scanner;
+
+import com.zrpg.characters.*;
+import com.zrpg.display.*;
+import com.zrpg.jsonloaders.BackgroundLoader;
 
 public class GameManager {
     private  int selectedMap = 0;
@@ -17,7 +24,7 @@ public class GameManager {
 
     public  boolean gameOver = false; // Vrai lorsque la partie est finie
     public  Player[] players; // Liste de joueurs
-    public  Character selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
+    public  PblCharacter selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
 
     /*
         tour%2 = 0 => Joueur 1
@@ -35,6 +42,7 @@ public class GameManager {
     public  int step;
 
     public GameManager() {
+
         tour = 0;
         step = 0;
 
@@ -54,6 +62,8 @@ public class GameManager {
         players[1].addChar("Perso2", "Knight", 13, 1);
 
         BackgroundLoader backgroundLoaded = loadMap(selectedMap);
+
+        System.out.println(backgroundLoaded.name);
 
         mapX = backgroundLoaded.sizeX;
         mapY = backgroundLoaded.sizeY;
@@ -114,7 +124,7 @@ public class GameManager {
     public  void setupCharSelect() {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
 
-        Character character;
+        PblCharacter character;
         int counter = 0;
 
         for (int i = 0; i < players[tour%2].characters.size(); i++) {
@@ -182,7 +192,7 @@ public class GameManager {
     /**** SELECTION DU PERSONNAGE ATTAQUE ****/
     public  void attackSelect(int x, int y) {
         if (overlay[y][x] == 4) {
-            Character adversary = findChar(x, y, players[(tour+1)%2]); // Recherche du personnage ennemi placé sur la case sélectionné
+            PblCharacter adversary = findChar(x, y, players[(tour+1)%2]); // Recherche du personnage ennemi placé sur la case sélectionné
             selectedChar.attack(adversary);
 
             step = 0; // Retour à la première étape
@@ -226,8 +236,8 @@ public class GameManager {
     /*
     Cherche si un personnage existe sur cette case
     */
-    public  Character findChar (int x, int y, Player player) {
-        Character character;
+    public  PblCharacter findChar (int x, int y, Player player) {
+        PblCharacter character;
         for (int i = 0; i < player.characters.size(); i++) {
             character = player.characters.get(i);
 
@@ -252,14 +262,15 @@ public class GameManager {
 
     public  BackgroundLoader loadMap(int map) {
         try {
+            InputStream a = getClass().getClassLoader().getResourceAsStream("Json/maps.json");
             Gson gson = new Gson();
-            BackgroundLoader[] backgrounds = gson.fromJson(new FileReader("Assets/maps.json"), BackgroundLoader[].class);
+            BackgroundLoader[] backgrounds = gson.fromJson(new InputStreamReader(a), BackgroundLoader[].class);
             return backgrounds[map];
-        } catch (FileNotFoundException e) {
-            System.out.println("Erreur de chargement de la map");
+        } catch (Exception e) {
+            System.out.println("Erreur de chargement du décor");
+            return null;
         }
 
-        return null;
     }
 
     public  void pause(int ms) {

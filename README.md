@@ -58,24 +58,22 @@ Planning prévisionnel:
 
 ## Run
 
-OS X/
-
-```bash
-javac -cp .:libs/gson-2.8.5.jar *.java
-java -cp .:libs/gson-2.8.5.jar Launch
-
 Windows
-javac -cp libs/gson-2.8.5.jar *.java
-java -cp ".;libs/gson-2.8.5.jar" Launch
+```bash
+./gradlew play 
+```
+
+Unix
+```bash
+./play.sh
 ```
 
 ## Todo
 
 Objectifs à court terme (10 mins à 2h)
 
-- Passage sous Gradle avec une structure plus propre
-- Calcul des cases possibles de déplacement et d'attaque selon la distance (difficile)
 - Barre de HP au dessus des personnages
+- Calcul des cases possibles de déplacement et d'attaque selon la distance (difficile)
 - Animation pour l'attaque
 - Animation pour le déplacement
 - Equilibrage du jeu
