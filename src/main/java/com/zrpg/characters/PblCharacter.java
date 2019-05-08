@@ -1,29 +1,27 @@
 package com.zrpg.characters;
 
-import java.io.IOException;
-import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class PblCharacter {
 
-	public String name; // Nom du personnage
+	private String name; // Nom du personnage
 	private boolean alive; // Est-ce que le personnage est en vie
-	public String type; // Classe du personnage
+	private String type; // Classe du personnage
 
 	private int posX; // colonne sur la map
 	private int posY; // ligne
 
 	public int hp; // Points de vie restants
 	public int hpMax; // Points de vie totaux
-	public int mp; // Points de magie restants
-	public int mpMax; // Points de vie totaux
-	public int defense; // Points de défense/bouclier
-	public int attack; // Points de dégats moyen
+	private int mp; // Points de magie restants
+	private int mpMax; // Points de vie totaux
+	private int defense; // Points de défense/bouclier
+	private int attack; // Points de dégats moyen
 
 	public int range; // Portée d'attaque en nb de cases
 	public int speed; // Portée de déplacement
-	public int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
+	private int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
 
 	public BufferedImage idle;
 
@@ -58,7 +56,7 @@ public class PblCharacter {
 		return this.name + " a encore " + this.hp + "hp";
 	}
 
-	public void weaken(int damage){
+	private void weaken(int damage){
 		this.hp -= damage;
 
 		if (this.hp <= 0) {
@@ -82,7 +80,6 @@ public class PblCharacter {
 		adversary.weaken(damage);
 	}
 
-	/**** GETTERS & SETTERS ****/
 	public boolean isAlive () {
 		return this.alive;
 	}
@@ -99,5 +96,4 @@ public class PblCharacter {
 		this.posX = x;
 		this.posY = y;
 	}
-	/***************************/
 }

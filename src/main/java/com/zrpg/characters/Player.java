@@ -1,7 +1,6 @@
 package com.zrpg.characters;
 
 import java.util.ArrayList;
-import java.io.FileReader;
 import java.io.*;
 
 import com.google.gson.Gson;
@@ -13,7 +12,7 @@ public class Player{
 	public ArrayList<PblCharacter> characters; // Tableau des personnages du joueur
 
 	public Player(String name) {
-		characters = new ArrayList<PblCharacter>();
+		characters = new ArrayList<>();
 	}
 
 	public String toString () {
@@ -49,11 +48,16 @@ public class Player{
 	}
 
 	public boolean isDed () {
-		for (int i = 0; i < characters.size(); i++) {
-			if (characters.get(i).isAlive())
+		for (PblCharacter character : characters) {
+			if (character.isAlive())
 				return false;
 		}
 
 		return true;
 	}
+
+	public String getName() {
+		return name;
+	}
+
 }

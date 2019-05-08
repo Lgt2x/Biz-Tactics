@@ -10,9 +10,7 @@ public class Display extends JFrame {
 
     public MapDisplay mapPanel; // Dessin de la map
     private  JSplitPane splitPane; // Conteneur de tous les panels
-    private  JPanel bottomPanel; // Panel contenant le message
     private  JLabel message; // Message affiché en bas de l'écran
-    private final int messageHeight = 100; // Hauteur du Label
     public int res; // Taille d'un côté d'une case de la map, calculée à partir de la résolution de l'écran
 
     public Display(GameManager gm) {
@@ -21,12 +19,15 @@ public class Display extends JFrame {
         res = calcRes(gm.overlay); // Résolution des cases en px en fonction de la taille de l'écran
         mapPanel = new MapDisplay(this, gm); // Grille d'Display, sous forme de classe
         splitPane = new JSplitPane(); // Conteneur global qui comprend la gm.map et le message
-        bottomPanel = new JPanel(); // Panel du bas qui contient le texte
+        // Panel contenant le message
+        JPanel bottomPanel = new JPanel(); // Panel du bas qui contient le texte
         message = new JLabel("Some text"); // Message en bas
 
 
+        // Hauteur du Label
+        int messageHeight = 100;
         setPreferredSize(new Dimension(res * gm.mapX,
-                                       res * gm.mapY+messageHeight)); // Réglage de la taille de la fenêtre
+                                       res * gm.mapY+ messageHeight)); // Réglage de la taille de la fenêtre
 
         getContentPane().setLayout(new GridLayout()); /* Layout en forme de grille qui va recevoir les panels
                                                         (ici 1 colonne, 2 lignes) */
@@ -52,7 +53,7 @@ public class Display extends JFrame {
 
     }
 
-    public  int calcRes(int[][] monde) {
+    private int calcRes(int[][] monde) {
         final double p = .8; // % de la zone utile a occuper
         int resC;
         Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds(); // Espace dispo de l'écran

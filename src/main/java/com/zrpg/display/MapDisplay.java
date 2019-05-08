@@ -5,9 +5,6 @@ import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.io.IOException;
-import javax.imageio.ImageIO;
-
 import com.zrpg.GameManager;
 import com.zrpg.characters.*;
 
@@ -17,7 +14,7 @@ public class MapDisplay extends JPanel {
     private GameManager gm; // Référence à la classe principale
 
     private BufferedImage worldImage; // Espace de dessin
-    private BufferedImage[] backgroundPics; // Sprites
+    private ImgLib imgLib;
     private ColorLib colorLib; // Couleurs prédéfinies
 
     private int caseHoveredX = 0; // X de la case survolée
@@ -28,20 +25,11 @@ public class MapDisplay extends JPanel {
         this.aff = aff;
         this.gm = gm;
         this.colorLib = new ColorLib();
+        this.imgLib = new ImgLib();
 
         worldImage = new BufferedImage(aff.res * gm.mapX, aff.res * gm.mapY, BufferedImage.TYPE_INT_RGB);
         setPreferredSize(new Dimension(aff.res * gm.mapX, aff.res * gm.mapY));
 
-        try {
-            backgroundPics = new BufferedImage[]{
-                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/grass.png")),
-                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/rock.png")),
-                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/rock2.png")),
-
-            };
-        } catch (IOException e) {
-            System.out.println("Erreur de chargement des images du décor");
-        }
 
         // Détection du clic
         addMouseListener(new MouseAdapter() {
@@ -80,7 +68,6 @@ public class MapDisplay extends JPanel {
                 repaint();
             }
         });
-        ;
     }
 
     private void drawOverlay(Graphics g) {
@@ -101,7 +88,7 @@ public class MapDisplay extends JPanel {
     private void drawBackground(Graphics g) {
         for (int y = 0; y < gm.mapY; y++) {
             for (int x = 0; x < gm.mapX; x++) {
-                g.drawImage(backgroundPics[gm.background[y][x]], x * aff.res, y * aff.res, aff.res, aff.res, null);
+                g.drawImage(imgLib.getBgImage(gm.background[y][x]), x * aff.res, y * aff.res, aff.res, aff.res, null);
             }
         }
     }
