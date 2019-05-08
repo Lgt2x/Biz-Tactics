@@ -8,7 +8,7 @@ import com.zrpg.GameManager;
 
 public class Display extends JFrame {
 
-    public  Map mapPanel; // Dessin de la map
+    public MapDisplay mapPanel; // Dessin de la map
     private  JSplitPane splitPane; // Conteneur de tous les panels
     private  JPanel bottomPanel; // Panel contenant le message
     private  JLabel message; // Message affiché en bas de l'écran
@@ -19,7 +19,7 @@ public class Display extends JFrame {
         super("T-RPG"); // Nom de la fenêtre
 
         res = calcRes(gm.overlay); // Résolution des cases en px en fonction de la taille de l'écran
-        mapPanel = new Map(this, gm); // Grille d'Display, sous forme de classe
+        mapPanel = new MapDisplay(this, gm); // Grille d'Display, sous forme de classe
         splitPane = new JSplitPane(); // Conteneur global qui comprend la gm.map et le message
         bottomPanel = new JPanel(); // Panel du bas qui contient le texte
         message = new JLabel("Some text"); // Message en bas

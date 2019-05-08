@@ -11,32 +11,23 @@ import javax.imageio.ImageIO;
 import com.zrpg.GameManager;
 import com.zrpg.characters.*;
 
-public class Map extends JPanel {
+public class MapDisplay extends JPanel {
 
     private Display aff; // Référence à l'objet JFrame d'affichage
     private GameManager gm; // Référence à la classe principale
+
     private BufferedImage worldImage; // Espace de dessin
+    private BufferedImage[] backgroundPics; // Sprites
+    private ColorLib colorLib; // Couleurs prédéfinies
 
-    // Définition des constantes de couleur
-    private Color[] colors = new Color[]{
-            new Color(255, 255, 255, 80),  // 0: blanc
-            new Color(255, 204, 0, 80),    // 1: jaune de sélection de personnage
-            new Color(153, 204, 255, 80),  // 2: bleu de possibilité de déplacement
-            new Color(0, 102, 255, 80),    // 3: bleu, déplacement possible au survol de la souris
-            new Color(204, 51, 0, 80),     // 4: rouge, attaque possible d'un ennemi
-            new Color(0, 0, 0, 255),       // 5: noir
-            new Color(255, 255, 255, 255), // 6: blanc
-            new Color(173, 14, 43, 255)    // 7: rouge
-    };
+    private int caseHoveredX = 0; // X de la case survolée
+    private int caseHoveredY = 0; // Y de la case survolée
 
-    private int caseHoveredX = 0;
-    private int caseHoveredY = 0;
 
-    private BufferedImage[] backgroundPics;
-
-    public Map(Display aff, GameManager gm) {
+    public MapDisplay(Display aff, GameManager gm) {
         this.aff = aff;
         this.gm = gm;
+        this.colorLib = new ColorLib();
 
         worldImage = new BufferedImage(aff.res * gm.mapX, aff.res * gm.mapY, BufferedImage.TYPE_INT_RGB);
         setPreferredSize(new Dimension(aff.res * gm.mapX, aff.res * gm.mapY));
@@ -52,24 +43,22 @@ public class Map extends JPanel {
             System.out.println("Erreur de chargement des images du décor");
         }
 
-        // Ajout d'un récepteur d'évenement
+        // Détection du clic
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) { // Au clic
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                int caseX = x / aff.res;
+                int caseX = x / aff.res; // Calcul de la case cliquée
                 int caseY = y / aff.res;
 
                 gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
-
-                //gm.overlay[(int)(y/aff.res)][(int)(x/aff.res)] = 2;
-
                 repaint(); // Recalcul des éléments du canvas mis à jour
             }
         });
 
+        // Détection du mouvement de souris
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -95,16 +84,6 @@ public class Map extends JPanel {
     }
 
     private void drawOverlay(Graphics g) {
-        /*
-
-            COULEURS
-            0 = BLANC
-            1 = NOIR
-            2 = BLEU
-            Défaut: BLANC
-
-        */
-
         for (int y = 0; y < gm.mapY; y++) {
             for (int x = 0; x < gm.mapX; x++) {
                 fillTile(x, y, gm.overlay[y][x], g);
@@ -112,9 +91,9 @@ public class Map extends JPanel {
         }
     }
 
-    private void fillTile(int x, int y, int couleur, Graphics g) {
-        if (y >= 0 && y < gm.mapY && x >= 0 && x < gm.mapX && couleur != 0) {
-            g.setColor(colors[couleur]);
+    private void fillTile(int x, int y, int color, Graphics g) {
+        if (y >= 0 && y < gm.mapY && x >= 0 && x < gm.mapX && color != 0) {
+            g.setColor(colorLib.getBgColor(color)); // Choix de la couleur de peinture
             g.fillRect(aff.res * x, aff.res * y, aff.res, aff.res);
         }
     }
@@ -144,29 +123,32 @@ public class Map extends JPanel {
                     imgWidth = (character.idle.getWidth() * aff.res) / character.idle.getHeight();
                 }
 
+                // Dessin du personnage
                 g.drawImage(character.idle, character.getPosX() * aff.res + (aff.res - imgWidth) / 2,
                         character.getPosY() * aff.res + (aff.res - imgHeight) / 2,
                         imgWidth, imgHeight, null);
 
-                g.setColor(colors[5]);
-                g.fillRoundRect(aff.res * character.getPosX(),
-                        (int) (aff.res * (character.getPosY() - 0.2)),
+                // Dessin du fond bleu de la barre de vie
+                g.setColor(colorLib.getColor("Light blue"));
+                g.fillRoundRect(aff.res * character.getPosX(),      // x
+                        (int) (aff.res * (character.getPosY() - 0.2)), // y
 
-                        aff.res,
-                        (int) (aff.res * 0.2),
+                        aff.res,                                       // Largeur
+                        (int) (aff.res * 0.2),                         // Hauteur
 
-                        (int) (aff.res * 0.1),
-                        (int) (aff.res * 0.1));
+                        (int) (aff.res * 0.08),                        // Arrondi x
+                        (int) (aff.res * 0.08));                       // Arrondi y
 
-                g.setColor(colors[7]);
-                g.fillRoundRect((int) (aff.res * (character.getPosX() + 0.1)),
+                // Dessin du rouge de la barre de vie
+                g.setColor(colorLib.getColor("Red"));
+                g.fillRoundRect((int) (aff.res * (character.getPosX() + 0.05)),
                         (int) (aff.res * (character.getPosY() - 0.15)),
 
-                        (int)(aff.res * 0.8 * character.hp/character.hpMax),
-                        (int) (aff.res * 0.1),
+                        (int)(aff.res * 0.9 * character.hp/character.hpMax),
+                        (int) (aff.res * 0.12),
 
-                        aff.res / 10,
-                        aff.res / 10);
+                        (int) (aff.res * 0.08),
+                        (int) (aff.res * 0.08));
 
 
             }

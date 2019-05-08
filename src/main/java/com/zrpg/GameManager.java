@@ -89,7 +89,7 @@ public class GameManager {
     }
 
     /*
-     * Méthode déclenchée au clic sur une case, déclenchée par le gestionnaire d'events de la Map
+     * Méthode déclenchée au clic sur une case, déclenchée par le gestionnaire d'events de la MapDisplay
     */
     public  void clickHandle(int x, int y) {
         if (!gameOver) {
