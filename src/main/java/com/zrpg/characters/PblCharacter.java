@@ -92,6 +92,8 @@ public class PblCharacter {
 		return this.posY;
 	}
 
+	public String getName() { return this.name; }
+
 	public void moveTo(int x, int y) {
 		this.posX = x;
 		this.posY = y;

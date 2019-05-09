@@ -8,10 +8,11 @@ import com.zrpg.jsonloaders.*;
 
 public class Player{
 
-	public String name;
+	private String name;
 	public ArrayList<PblCharacter> characters; // Tableau des personnages du joueur
 
 	public Player(String name) {
+		this.name = name;
 		characters = new ArrayList<>();
 	}
 

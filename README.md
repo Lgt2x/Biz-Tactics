@@ -72,8 +72,7 @@ Unix
 
 Objectifs à court terme (10 mins à 2h)
 
-- Calcul des cases possibles de déplacement et d'attaque selon la distance (difficile)
 - Animation pour l'attaque
 - Animation pour le déplacement
 - Equilibrage du jeu
-- Définition des couleurs dans une classe, proprement
+- Fin du jeu propre, pouroir recommencer la partie facilement

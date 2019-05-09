@@ -48,12 +48,6 @@ public class GameManager {
                 new Player("Player 2")
         };
 
-        /*Scanner sc = new Scanner (System.in);
-
-        System.out.println("Quels noms?");
-        players[0].name = sc.nextLine();
-        players[1].name = sc.nextLine();*/
-
         players[0].addChar("Perso1", "Berserker", 11, 1);
         players[0].addChar("Perso1.2", "Sniper", 10, 5);
         players[1].addChar("Perso2", "Knight", 13, 1);
@@ -131,15 +125,15 @@ public class GameManager {
                 overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
                 counter++;
             }
-
-            if (counter == 0) { // Si il n'y a plus aucun personnage vivant, la partie est terminée
-                gameOver = true;
-                aff.changeMessage("Jeu terminé : " + players[(tour + 1) % 2].name + " WINS");
-                return;
-            }
-
-            aff.changeMessage(players[tour % 2].name + " : quel personnage bouger?");
         }
+
+        if (counter == 0) { // Si il n'y a plus aucun personnage vivant, la partie est terminée
+            gameOver = true;
+            aff.changeMessage("Jeu terminé : " + players[(tour + 1) % 2].getName() + " WINS");
+            return;
+        }
+
+        aff.changeMessage(players[tour % 2].getName() + " : quel personnage bouger?");
     }
 
 
@@ -158,12 +152,10 @@ public class GameManager {
         cleanOverlay();
 
         findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.speed + 1, 2);
-
-
         overlay[selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
 
         aff.mapPanel.repaint();
-        aff.changeMessage(players[tour % 2].name + " : où bouger le personnage?");
+        aff.changeMessage(players[tour % 2].getName() + " : où bouger le personnage?");
     }
 
     private void attackSelect(int x, int y) {
@@ -181,31 +173,29 @@ public class GameManager {
     private void setupAttackSelect() {
         cleanOverlay();
 
-        int x;
-        int y;
-        int counter = 0;
+        findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.range + 1, 4);
 
-        for (int offsetX = -selectedChar.range; offsetX <= selectedChar.range; offsetX++) {
-            for (int offsetY = Math.abs(offsetX) - selectedChar.range; offsetY <= -Math.abs(offsetX) + selectedChar.range; offsetY++) {
-                x = selectedChar.getPosX() + offsetX;
-                y = selectedChar.getPosY() + offsetY;
+        boolean canAttack = false;
 
-                if (x >= 0 && x < mapX && y >= 0 && y < mapY
-                        && findChar(x, y, players[(tour + 1) % 2]) != null) {
-                    overlay[y][x] = 4;
-                    counter++;
+        for (int y = 0; y < mapY; y++) {
+            for (int x = 0; x < mapX; x++) {
+                if (overlay[y][x] == 4) {
+                    canAttack = true;
+                    break;
                 }
             }
+
+            if (canAttack)
+                break;
         }
 
-        aff.changeMessage(players[tour % 2].name + " : quel personnage attaquer?");
-
-        if (counter == 0) { // Si il n'y a personne à attaquer, passage à l'étape suivante
+        if (!canAttack) { // Si il n'y a personne à attaquer, passage à l'étape suivante
             step = 0;
             tour++;
             setupCharSelect();
         }
 
+        aff.changeMessage(players[tour % 2].getName() + " : quel personnage attaquer?");
         aff.mapPanel.repaint();
     }
 
@@ -233,18 +223,16 @@ public class GameManager {
     private void findPaths(int x, int y, int distanceLeft, int color) {
         if (distanceLeft > 0 && x >= 0 && x < mapX && y >= 0 && y < mapY) {
             if (color == 2) {
-
                 if (background[y][x] == 0 && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null) {
                     overlay[y][x] = 2;
                 } else {
                     return;
                 }
             } else if (color == 4) {
-                if (background[y][x] == 0) {
-                    if (findChar(x, y, players[(tour+1)%2]) != null) {
-                        overlay[y][x] = 4;
-                    }
-                } else {
+                if (findChar(x, y, players[(tour+1)%2]) != null) {
+                    overlay[y][x] = 4;
+                }
+                if (!(background[y][x] == 0 && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null)) {
                     return;
                 }
             }
@@ -260,10 +248,9 @@ public class GameManager {
      * Nettoie l'overlay
      */
     private void cleanOverlay() {
-        for (int i = 0; i < mapY; i++) {
-            for (int j = 0; j < mapX; j++) {
-                overlay[i][j] = 0;
-            }
+        for (int y = 0; y < mapY; y++) {
+            for (int x = 0; x < mapX; x++)
+                overlay[y][x] = 0;
         }
     }
 
