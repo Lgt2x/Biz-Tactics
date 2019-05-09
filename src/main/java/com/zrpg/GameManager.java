@@ -10,10 +10,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class GameManager {
+    public int[][] background; // Fond, avec ses obstacles
     public int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
+    private int selectedMap = 0;
+    private Display aff; // Référence à l'objet d'affichage
+
     public int mapX; // Nombre de colonnes de la map
     public int mapY; // Nombre de lignes de la map
-    public int[][] background; // Fond, avec ses obstacles
+
+
     private boolean gameOver = false; // Vrai lorsque la partie est finie
     public Player[] players; // Liste de joueurs
     private PblCharacter selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
@@ -24,14 +29,14 @@ public class GameManager {
         tour%2 = 0 => Joueur 1
         tour%2 = 1 => Joueur 2
     */
-    private int selectedMap = 0;
+
 
     /*
         step%3 = 0 => Sélection du personnage à jouer
         step%3 = 1 => Sélection de la case de déplacement
         step%3 = 2 => Sélection du personnage à attaquer
     */
-    private Display aff; // Référence à l'objet d'affichage
+
 
     public GameManager() {
 
@@ -53,12 +58,15 @@ public class GameManager {
         players[0].addChar("Perso1.2", "Sniper", 10, 5);
         players[1].addChar("Perso2", "Knight", 13, 1);
 
+
         BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
         mapX = backgroundLoaded.sizeX;
         mapY = backgroundLoaded.sizeY;
 
         background = new int[mapY][mapX];
+        fillBg(backgroundLoaded);
+
         overlay = new int[mapY][mapX];
 
 
@@ -149,32 +157,13 @@ public class GameManager {
     private void setupMoveSelect() {
         cleanOverlay();
 
-        int x;
-        int y;
+        findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.speed + 1, 2);
 
-        for (int offsetX = -selectedChar.speed; offsetX <= selectedChar.speed; offsetX++) {
-            for (int offsetY = Math.abs(offsetX) - selectedChar.speed; offsetY <= -Math.abs(offsetX) + selectedChar.speed; offsetY++) {
-
-                x = selectedChar.getPosX() + offsetX;
-                y = selectedChar.getPosY() + offsetY;
-
-                if (x >= 0 && x < mapX
-                        && y >= 0 && y < mapY
-                        && findChar(x, y, players[(tour + 1) % 2]) == null // Vérification s'il n'y a pas de personnage ennemi sur la case de déplacement
-                        && findChar(x, y, players[tour % 2]) == null // Pas de personnage allié non plus
-                        && background[y][x] == 0) { // Si c'est bien une case d'herbe
-                    overlay[y][x] = 2; // La case devient bleue
-                }
-            }
-
-            aff.changeMessage(players[tour % 2].name + " : où bouger le personnage?");
-
-
-        }
 
         overlay[selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
 
         aff.mapPanel.repaint();
+        aff.changeMessage(players[tour % 2].name + " : où bouger le personnage?");
     }
 
     private void attackSelect(int x, int y) {
@@ -241,6 +230,32 @@ public class GameManager {
         return null;
     }
 
+    private void findPaths(int x, int y, int distanceLeft, int color) {
+        if (distanceLeft > 0 && x >= 0 && x < mapX && y >= 0 && y < mapY) {
+            if (color == 2) {
+
+                if (background[y][x] == 0 && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null) {
+                    overlay[y][x] = 2;
+                } else {
+                    return;
+                }
+            } else if (color == 4) {
+                if (background[y][x] == 0) {
+                    if (findChar(x, y, players[(tour+1)%2]) != null) {
+                        overlay[y][x] = 4;
+                    }
+                } else {
+                    return;
+                }
+            }
+
+            findPaths(x-1, y, distanceLeft - 1, color);
+            findPaths(x+1, y, distanceLeft - 1, color);
+            findPaths(x, y-1, distanceLeft - 1, color);
+            findPaths(x, y+1, distanceLeft - 1, color);
+        }
+    }
+
     /**
      * Nettoie l'overlay
      */
@@ -254,34 +269,38 @@ public class GameManager {
 
     /**
      * Charge le fond depuis un fichier json
-     * @param map la map choisie pour le jeu
+     * @param mapNb la map choisie pour le jeu
      * @return retourne un BackgroundLoader contenant les infos serializées du json
      */
-    private BackgroundLoader loadMap(int map) {
+    private BackgroundLoader loadMap(int mapNb) {
         try {
-            InputStream jsonStream = getClass().getClassLoader().getResourceAsStream("Json/maps.json"); // Récupération du fichier json sous forme de stream
+            // Récupération du fichier json sous forme de stream
+            InputStream jsonStream = getClass().getClassLoader().getResourceAsStream("Json/maps.json");
 
             // De-serialization du json
             Gson gson = new Gson();
             BackgroundLoader[] backgrounds = gson.fromJson(new InputStreamReader(jsonStream), BackgroundLoader[].class);
 
             // Remplissage du tableau background avec les infos du BackgroundLoader
-            for (int y = 0; y < mapY; y++) {
-                for (int x = 0; x < mapX; x++) {
-                    background[y][x] = backgrounds[map].map.get(y).charAt(x) - '0';
-                    /* charAt donne une représentation UTF-16 du caractère,
-                     * si on y soustrait la valeur ASCII du caractère 0 (48),
-                     * on trouve bien le chiffre que l'on veut de la chaine
-                     */
-                }
-            }
+            return backgrounds[mapNb];
 
-            return backgrounds[map];
         } catch (Exception e) {
             System.out.println("Erreur de chargement du décor");
             return null;
         }
 
+    }
+
+    private void fillBg (BackgroundLoader backgroundLoaded) {
+        for (int y = 0; y < backgroundLoaded.sizeY; y++) {
+            for (int x = 0; x < backgroundLoaded.sizeX; x++) {
+                background[y][x] = backgroundLoaded.map.get(y).charAt(x) - '0';
+                /* charAt donne une représentation UTF-16 du caractère,
+                 * si on y soustrait la valeur ASCII du caractère 0 (48),
+                 * on trouve bien le chiffre que l'on veut de la chaine
+                 */
+            }
+        }
     }
 
     public void pause (int ms) {

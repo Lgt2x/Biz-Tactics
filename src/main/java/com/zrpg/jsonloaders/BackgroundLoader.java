@@ -8,6 +8,8 @@ public class BackgroundLoader {
     public int sizeY;
     public ArrayList<String> map;
 
-    //public String toString() {
+    public String toString() {
+        return this.name;
+    }
     //    return String.valueOf(this.name);}
 }

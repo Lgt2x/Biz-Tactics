@@ -5,6 +5,6 @@
 	"defense": 20,
 	"attack": 20,
 	"range": 2,
-	"speed": 3,
+	"speed": 5,
 	"precision": 5
 }
