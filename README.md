@@ -1,4 +1,4 @@
-# Biz Tactics
+![Game logo](Graphics/Logo.png)
 
 Un Tactical-RPG au tour par tour.
 
