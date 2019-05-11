@@ -27,8 +27,8 @@ public class MapDisplay extends JPanel {
         this.colorLib = new ColorLib();
         this.imgLib = new ImgLib();
 
-        worldImage = new BufferedImage(aff.res * gm.mapX, aff.res * gm.mapY, BufferedImage.TYPE_INT_RGB);
-        setPreferredSize(new Dimension(aff.res * gm.mapX, aff.res * gm.mapY));
+        worldImage = new BufferedImage(aff.res * gm.sizeX, aff.res * gm.sizeY, BufferedImage.TYPE_INT_RGB);
+        setPreferredSize(new Dimension(aff.res * gm.sizeX, aff.res * gm.sizeY));
 
 
         // Détection du clic
@@ -71,23 +71,23 @@ public class MapDisplay extends JPanel {
     }
 
     private void drawOverlay(Graphics g) {
-        for (int y = 0; y < gm.mapY; y++) {
-            for (int x = 0; x < gm.mapX; x++) {
+        for (int y = 0; y < gm.sizeY; y++) {
+            for (int x = 0; x < gm.sizeX; x++) {
                 fillTile(x, y, gm.overlay[y][x], g);
             }
         }
     }
 
     private void fillTile(int x, int y, int color, Graphics g) {
-        if (y >= 0 && y < gm.mapY && x >= 0 && x < gm.mapX && color != 0) {
+        if (y >= 0 && y < gm.sizeY && x >= 0 && x < gm.sizeX && color != 0) {
             g.setColor(colorLib.getBgColor(color)); // Choix de la couleur de peinture
             g.fillRect(aff.res * x, aff.res * y, aff.res, aff.res);
         }
     }
 
     private void drawBackground(Graphics g) {
-        for (int y = 0; y < gm.mapY; y++) {
-            for (int x = 0; x < gm.mapX; x++) {
+        for (int y = 0; y < gm.sizeY; y++) {
+            for (int x = 0; x < gm.sizeX; x++) {
                 g.drawImage(imgLib.getBgImage(gm.background[y][x]), x * aff.res, y * aff.res, aff.res, aff.res, null);
             }
         }

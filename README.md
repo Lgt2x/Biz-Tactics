@@ -50,7 +50,8 @@ Ecrit au 29/04
     - Chargement des caractéristiques de personnage et maps depuis un fichier JSON en ressources
     - Passage du jeu sous Gradle
     - Amélioration du jeu: détection d'obstacles, calculs de chemins
-    - Détails graphiques: Barres de vie etc.
+    - Détails graphiques: Barres de vie
+    - Fin du jeu
 
 ## Organisation du code
 
@@ -117,4 +118,3 @@ Objectifs à court ou moyen terme
 - Animation pour l'attaque
 - Animation pour le déplacement
 - Equilibrage du jeu
-- Fin du jeu propre, pouroir recommencer la partie facilement

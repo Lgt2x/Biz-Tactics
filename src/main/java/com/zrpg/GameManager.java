@@ -15,8 +15,8 @@ public class GameManager {
     private int selectedMap = 0;
     private Display aff; // Référence à l'objet d'affichage
 
-    public int mapX; // Nombre de colonnes de la map
-    public int mapY; // Nombre de lignes de la map
+    public int sizeX; // Nombre de colonnes de la map
+    public int sizeY; // Nombre de lignes de la map
 
 
     private boolean gameOver = false; // Vrai lorsque la partie est finie
@@ -55,13 +55,13 @@ public class GameManager {
 
         BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
-        mapX = backgroundLoaded.sizeX;
-        mapY = backgroundLoaded.sizeY;
+        sizeX = backgroundLoaded.sizeX;
+        sizeY = backgroundLoaded.sizeY;
 
-        background = new int[mapY][mapX];
+        background = new int[sizeY][sizeX];
         fillBg(backgroundLoaded);
 
-        overlay = new int[mapY][mapX];
+        overlay = new int[sizeY][sizeX];
 
 
         aff = new Display(this); // Instanciation de la classe d'affichage
@@ -92,6 +92,9 @@ public class GameManager {
                     System.out.println("Erreur");
 
             }
+        } else { // Si la partie est terminée et qu'un nouveau clic est reçu, on relance le jeu
+            aff.exitApp(); // Fermeture de la fenêtre
+            GameManager gm2 = new GameManager(); // Création d'un nouveau jeu
         }
     }
 
@@ -117,20 +120,12 @@ public class GameManager {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
 
         PblCharacter character;
-        int counter = 0;
 
         for (int i = 0; i < players[tour % 2].characters.size(); i++) {
             character = players[tour % 2].characters.get(i);
             if (character.isAlive()) {
                 overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
-                counter++;
             }
-        }
-
-        if (counter == 0) { // Si il n'y a plus aucun personnage vivant, la partie est terminée
-            gameOver = true;
-            aff.changeMessage("Jeu terminé : " + players[(tour + 1) % 2].getName() + " WINS");
-            return;
         }
 
         aff.changeMessage(players[tour % 2].getName() + " : quel personnage bouger?");
@@ -163,6 +158,13 @@ public class GameManager {
             PblCharacter adversary = findChar(x, y, players[(tour + 1) % 2]); // Recherche du personnage ennemi placé sur la case sélectionné
             selectedChar.attack(adversary);
 
+            if (players[(tour+1)%2].isDed()) {
+                gameOver = true;
+                cleanOverlay();
+                aff.changeMessage("<html>" + players[tour%2].getName() + " gagne la partie!<br>Cliquez n'importe où pour recommencer</html>");
+                return;
+            }
+
             step = 0; // Retour à la première étape
             tour++; // Au tour adverse
 
@@ -177,8 +179,8 @@ public class GameManager {
 
         boolean canAttack = false;
 
-        for (int y = 0; y < mapY; y++) {
-            for (int x = 0; x < mapX; x++) {
+        for (int y = 0; y < sizeY; y++) {
+            for (int x = 0; x < sizeX; x++) {
                 if (overlay[y][x] == 4) {
                     canAttack = true;
                     break;
@@ -212,7 +214,7 @@ public class GameManager {
         for (int i = 0; i < player.characters.size(); i++) {
             character = player.characters.get(i);
 
-            if (character.getPosX() == x && character.getPosY() == y) {
+            if (character.getPosX() == x && character.getPosY() == y && character.isAlive()) {
                 return character;
             }
         }
@@ -221,7 +223,7 @@ public class GameManager {
     }
 
     private void findPaths(int x, int y, int distanceLeft, int color) {
-        if (distanceLeft > 0 && x >= 0 && x < mapX && y >= 0 && y < mapY) {
+        if (distanceLeft > 0 && x >= 0 && x < sizeX && y >= 0 && y < sizeY) {
             if (color == 2) {
                 if (background[y][x] == 0 && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null) {
                     overlay[y][x] = 2;
@@ -248,8 +250,8 @@ public class GameManager {
      * Nettoie l'overlay
      */
     private void cleanOverlay() {
-        for (int y = 0; y < mapY; y++) {
-            for (int x = 0; x < mapX; x++)
+        for (int y = 0; y < sizeY; y++) {
+            for (int x = 0; x < sizeX; x++)
                 overlay[y][x] = 0;
         }
     }
