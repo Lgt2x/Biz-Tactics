@@ -30,33 +30,75 @@ Gameplay librement inspiré de la série Fire Emblem, de Final Fantasy Tactics..
 
 ## Planification
 
-La date de rendu est le 3 Juin, ce qui nous laisse un mois de développement environ.
+La date de rendu est le 3 Juin 2019, ce qui nous laisse un mois de développement environ, à compter du 29 Avril.
 
-Planning prévisionnel:
-
+### Planning prévisionnel général
+Ecrit au 29/04
 - Semaine du 29/04 : Rédaction du cahier des charges, organisation du code et des tâches.
-- Semaine du 6/05 : Début du développement, chacun crée ses classes de son côté.
+- Semaine du 06/05 : Début du développement, chacun crée ses classes de son côté.
 - Semaine du 13/05 : Relier les différentes classes, pour avoir un premier prototype fonctionnel.
 - Semaine du 20/05 : Chargement de maps (bonus), des types de personnage, interactions entre personnages.
 - Semaine du 27/05 : Peaufinage, réglage des détails, début et fin du jeu
 
+### Bilans hebdomadaires
+- Semaine du 29/04 au 05/05
+    - Rédaction du Cahier des charges
+    - Ecriture des classes relatives aux personnages et joueurs
+    - Mise en place de l'affichage avec des images, détection du survol et du clic
+    - Gestion du gameplay, des tours de jeu, fonctionnement général
+- Semaine du 06/05 au 12/05
+    - Chargement des caractéristiques de personnage et maps depuis un fichier JSON en ressources
+    - Passage du jeu sous Gradle
+    - Amélioration du jeu: détection d'obstacles, calculs de chemins
+    - Détails graphiques: Barres de vie etc.
+
 ## Organisation du code
 
 ```
-├── Launch.java # Lancement du jeu
-├── GameManager.java # Gestion du plateau, des joueurs
-├── Affichage.java # Gestion de l'affichage
-├── Map.java # Gestion de la map
-├── Joueur.java # Classe du joueur, contenant les personnages
-├── Personnage.java # Classe du personnage, avec ses caractéristiques
-├── maps.txt # Maps prédéfinies, à charger
-├── Assets # Images utilisées, sons si besoin...
-│   └── Img1.png
-│   └── ...
-└── types.txt # Définition des types de personnages ainsi que leurs caractéristiques
+.
+└── main
+    ├── java                                // Contient tout le code du jeu
+    │   └── com
+    │       └── zrpg
+    │           ├── GameManager.java        // Gestion du jeu, prise en main des évenements
+    │           ├── Launch.java             // Lancement du jeu
+    │           ├── characters              // Caractéristiques des joueurs et personnages
+    │           │   ├── PblCharacter.java   // Personnage jouable
+    │           │   └── Player.java         // Classe attachée à un joueur, conteneur pour les personnages
+    │           ├── display                 // Gestion de l'affichage
+    │           │   ├── ColorLib.java       // Outil de chargement de couleurs
+    │           │   ├── Display.java        // Déclaration de la fenêtre
+    │           │   ├── ImgLib.java         // Outil de chargement d'images
+    │           │   └── MapDisplay.java     // Canvas de jeu
+    │           └── jsonloaders             // Classes utilisées pour la dé-serialization de fichiers JSON
+    │               ├── BackgroundLoader.java
+    │               └── CharLoader.java
+    ├── resources                           // Ressources du jeu: images, stats, maps...
+    │   ├── Json
+    │   │   ├── charStats                   // Statistiques de jeu des différentes classes de personnage
+    │   │   │   ├── Berserker.json
+    │   │   │   ├── Knight.json
+    │   │   │   └── Sniper.json
+    │   │   └── maps.json
+    │   └── Sprites
+    │       ├── Background
+    │       │   ├── grass.png
+    │       │   ├── rock.png
+    │       │   └── rock2.png
+    │       ├── Berserker
+    │       │   ├── attack.png
+    │       │   └── idle.png
+    │       ├── Knight
+    │       │   └── idle.png
+    │       └── Sniper
+    │           ├── attack.png
+    │           └── idle.png
+    └── scripts                             // Scripts de lancement du jeu
+        ├── start.bat                       // Script Windows, lancé par le task Play de Gradle
+        └── start.sh                        // Script UNIX, non utilisé pour le moment
 ```
 
-## Run
+## Lancement du jeu
 
 Windows
 ```bash
@@ -70,7 +112,7 @@ Unix
 
 ## Todo
 
-Objectifs à court terme (10 mins à 2h)
+Objectifs à court ou moyen terme
 
 - Animation pour l'attaque
 - Animation pour le déplacement
