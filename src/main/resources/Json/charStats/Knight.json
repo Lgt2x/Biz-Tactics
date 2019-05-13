@@ -2,9 +2,9 @@
 	"type": "Knight",
 	"hp": 50,
 	"mp": 10,
-	"defense": 20,
-	"attack": 20,
+	"defense": 15,
+	"attack": 15,
 	"range": 2,
 	"speed": 3,
-	"precision": 5
+	"precision": 3
 }
