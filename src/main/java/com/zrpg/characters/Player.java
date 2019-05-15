@@ -22,7 +22,8 @@ public class Player{
 
 	public void addChar (String name, String type, int posX, int posY) {
 		try {
-			String filename = "Json/charStats/" + type + ".json";
+			String filename = "Chars/" + type + "/stats.json";
+
 			InputStream a = getClass().getClassLoader().getResourceAsStream(filename);
 			Gson gson = new Gson(); // Deserializer Json
 

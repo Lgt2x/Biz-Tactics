@@ -3,6 +3,8 @@ package com.zrpg.characters;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
+import com.zrpg.display.ImgLib;
+
 public class PblCharacter {
 
 	private String name; // Nom du personnage
@@ -44,12 +46,9 @@ public class PblCharacter {
 		this.speed = speed;
 		this.precision = precision;
 
-		try {
-			String filename = "Sprites/"+ this.type + "/idle.png";
-			idle = ImageIO.read(getClass().getClassLoader().getResourceAsStream(filename));
-		} catch (Exception e) {
-			System.out.println("Image non trouvée");
-		}
+		ImgLib lib = new ImgLib();
+		this.idle = lib.loadImage("Chars/" + this.type + "/idle.png");
+
 	}
 
 	public String toString(){

@@ -6,23 +6,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-class ImgLib {
-    private static Map<String, BufferedImage> images = new HashMap<>();
+public class ImgLib {
     private static BufferedImage[] bgImages;
 
     public ImgLib() {
         try {
             bgImages = new BufferedImage[]{
-                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/grass.png")),
-                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/rock.png")),
-                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Sprites/Background/rock2.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/grass.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/rock.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/rock2.png")),
 
             };
 
-            //images.put("Attack", ImageIO.read()
 
         } catch (IOException e) {
-            System.out.println("Erreur de chargement des images");
+            System.out.println("Erreur de chargement des images de fond");
         }
 
     }
@@ -31,7 +29,14 @@ class ImgLib {
         return bgImages[number];
     }
 
-    public BufferedImage getImage(String imgName) {
-        return images.get(imgName);
+    public BufferedImage loadImage(String filename) {
+        try {
+
+            BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream(filename));
+            return img;
+        } catch (Exception e) {
+            System.out.println("Image " + filename + " non trouvée");
+            return null;
+        }
     }
 }

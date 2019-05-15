@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class GameManager {
+    public String mode = "title";
     public int[][] background; // Fond, avec ses obstacles
     public int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
     private int selectedMap = 0;
@@ -48,9 +49,16 @@ public class GameManager {
                 new Player("Player 2")
         };
 
-        players[0].addChar("Perso1", "Berserker", 11, 1);
-        players[0].addChar("Perso1.2", "Sniper", 10, 5);
-        players[1].addChar("Perso2", "Knight", 13, 1);
+        players[0].addChar("Bardy", "Bard", 3, 3);
+        players[0].addChar("Demony", "Demon", 3, 5);
+        players[0].addChar("Mercenaryy", "Mercenary", 3, 7);
+
+
+        players[1].addChar("Sagey", "Sage", 11, 3);
+        players[1].addChar("Witchy", "Witch", 11, 5);
+        players[1].addChar("Summonery", "Summoner", 11, 7);
+
+
 
 
         BackgroundLoader backgroundLoaded = loadMap(selectedMap);
@@ -66,8 +74,8 @@ public class GameManager {
 
         aff = new Display(this); // Instanciation de la classe d'affichage
 
-        setupCharSelect(); // Déclenchement du jeu en initialisant le premier tour
-        aff.mapPanel.repaint();
+        // setupCharSelect(); // Déclenchement du jeu en initialisant le premier tour
+        // aff.mapPanel.repaint();
 
     }
 
@@ -98,6 +106,14 @@ public class GameManager {
         }
     }
 
+    public void clickTitleScreen(String button) {
+        if (button == "play") {
+            aff.initGame();
+            this.mode = "game";
+            aff.mapPanel.repaint();
+        }
+    }
+
     /**
      * Méthode délenchée lors du clic sur une case lors de la sélection du personnage (étape 0)
      * @param x abscisse
@@ -116,7 +132,7 @@ public class GameManager {
     /**
      * Mise en place de la sélection des personnages: mise à jour de l'overlay
      */
-    private void setupCharSelect() {
+    public void setupCharSelect() {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
 
         PblCharacter character;
@@ -195,6 +211,7 @@ public class GameManager {
             step = 0;
             tour++;
             setupCharSelect();
+            return;
         }
 
         aff.changeMessage(players[tour % 2].getName() + " : quel personnage attaquer?");
@@ -264,7 +281,7 @@ public class GameManager {
     private BackgroundLoader loadMap(int mapNb) {
         try {
             // Récupération du fichier json sous forme de stream
-            InputStream jsonStream = getClass().getClassLoader().getResourceAsStream("Json/maps.json");
+            InputStream jsonStream = getClass().getClassLoader().getResourceAsStream("maps.json");
 
             // De-serialization du json
             Gson gson = new Gson();

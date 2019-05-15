@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class ColorLib {
+public class ColorLib {
     private static Map<String, Color> color = new HashMap<>();
     private static ArrayList<Color> bgColor = new ArrayList<>();
 

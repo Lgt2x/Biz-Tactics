@@ -111,6 +111,13 @@ Unix
 ./play.sh
 ```
 
+## Credits
+Character sprites from [Pixel Champions Micro Edition](https://chimericalbard.itch.io/pixel-champions)
+
+Map tileset from [Mozilla's Browser Quest](https://github.com/mozilla/BrowserQuest)
+
+Game logo by @Lgt2x
+
 ## Todo
 
 Objectifs à court ou moyen terme
@@ -118,3 +125,5 @@ Objectifs à court ou moyen terme
 - Animation pour l'attaque
 - Animation pour le déplacement
 - Equilibrage du jeu
+- Dessin de nouvelles maps
+- Ajout de sprites pour les maps

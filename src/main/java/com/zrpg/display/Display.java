@@ -22,7 +22,7 @@ public class Display extends JFrame {
         mapPanel = new MapDisplay(this, gm);
         splitPane = new JSplitPane();
         bottomPanel = new JPanel();
-        message = new JLabel("Some text");
+        message = new JLabel("");
 
 
         int messageHeight = 100; // Hauteur du Label
@@ -45,7 +45,7 @@ public class Display extends JFrame {
         message.setVerticalAlignment(SwingConstants.CENTER); // Centrage vertical du texte
         message.setForeground(Color.BLACK); // Couleur du texte
 
-        bottomPanel.setBackground(new Color(210, 186, 55)); // Couleur de fond du texte
+        bottomPanel.setBackground(new Color(255, 255, 255)); // Couleur de fond du texte
         bottomPanel.setMaximumSize(new Dimension(res*gm.sizeY, 100)); // Taille max du Label
         bottomPanel.add(message);
 
@@ -76,6 +76,16 @@ public class Display extends JFrame {
         return resC;
     }
 
+    public void initGame() {
+        gm.setupCharSelect();
+        bottomPanel.setBackground(new Color(210, 186, 55));
+    }
+
+
+    /**
+     * Changement du message en bas de l'écran
+     * @param text texte du message
+     */
     public  void changeMessage(String text) {
         message.setText("<html><div style='text-align : center;'>" + text + "</div></html>");
     }

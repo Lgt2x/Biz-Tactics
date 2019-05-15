@@ -1,9 +1,9 @@
 package com.zrpg.display;
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 import com.zrpg.GameManager;
 import com.zrpg.characters.*;
@@ -20,6 +20,9 @@ public class MapDisplay extends JPanel {
     private int caseHoveredX = 0; // X de la case survolée
     private int caseHoveredY = 0; // Y de la case survolée
 
+    private int caseClickedX = 0;
+    private int caseClickedY = 0;
+
 
     public MapDisplay(Display aff, GameManager gm) {
         this.aff = aff;
@@ -34,15 +37,32 @@ public class MapDisplay extends JPanel {
         // Détection du clic
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) { // Au clic
+            public void mousePressed(MouseEvent e) { // Le bouton de la souris est pressé
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
 
-                int caseX = x / aff.res; // Calcul de la case cliquée
-                int caseY = y / aff.res;
+                caseClickedX = x / aff.res; // Calcul de la case cliquée
+                caseClickedY = y / aff.res;
+            }
+        });
 
-                gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
-                repaint(); // Recalcul des éléments du canvas mis à jour
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) { // Le bouton de la souris est relâché
+                if (gm.mode == "game") {
+                    int x = e.getX();
+                    int y = e.getY();
+
+                    int caseX = x / aff.res;
+                    int caseY = y / aff.res;
+
+                    if (caseX == caseClickedX && caseY == caseClickedY) { // Si la souris est restée sur la même case depuis que le clic est enfoncé
+                        gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
+                        repaint(); // Recalcul des éléments du canvas mis à jour
+                    }
+                } else if (gm.mode == "title"){
+                    gm.clickTitleScreen("play");
+                }
             }
         });
 
@@ -52,6 +72,7 @@ public class MapDisplay extends JPanel {
             public void mouseMoved(MouseEvent e) {
                 int x = e.getX(); // Récupération des coordonnées du clic
                 int y = e.getY();
+
 
                 int caseX = x / aff.res;
                 int caseY = y / aff.res;
@@ -66,6 +87,7 @@ public class MapDisplay extends JPanel {
                     gm.overlay[caseY][caseX] = 3;
 
                 repaint();
+
             }
         });
     }
@@ -142,14 +164,25 @@ public class MapDisplay extends JPanel {
         }
     }
 
+    private void drawTitleScreen(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(0,0, aff.res * gm.sizeX, aff.res * gm.sizeY);
+        g.drawImage(imgLib.loadImage("Imgs/Logo.png"),aff.res * gm.sizeX / 10, aff.res * gm.sizeY / 10, aff.res * gm.sizeX * 9/10, aff.res * gm.sizeX / 2, null);
+    }
+
     public void paint(Graphics g) {
         Graphics gw = worldImage.getGraphics(); // Espace de dessin
 
-        drawBackground(gw);
-        drawOverlay(gw);
+        if (gm.mode == "game") {
+            drawBackground(gw);
+            drawOverlay(gw);
 
-        drawChars(gw, gm.players[0]);
-        drawChars(gw, gm.players[1]);
+            drawChars(gw, gm.players[0]);
+            drawChars(gw, gm.players[1]);
+
+        } else if (gm.mode == "title") {
+            drawTitleScreen(gw);
+        }
 
         g.drawImage(worldImage, 0, 0, null); // Affichage de l'image créée sur le Panel
     }

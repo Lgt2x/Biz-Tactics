@@ -1,5 +1,5 @@
 out/*
 build/*
-src/main/resources/Sprites/Brut/*
+src/main/resources/Brut/*
 .idea
 .gradle
