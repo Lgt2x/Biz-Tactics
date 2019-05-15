@@ -1,8 +1,6 @@
 package com.zrpg.characters;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-
 import com.zrpg.display.ImgLib;
 
 public class PblCharacter {
@@ -14,15 +12,15 @@ public class PblCharacter {
 	private int posX; // colonne sur la map
 	private int posY; // ligne
 
-	public int hp; // Points de vie restants
-	public int hpMax; // Points de vie totaux
+	private int hp; // Points de vie restants
+	private int hpMax; // Points de vie totaux
 	private int mp; // Points de magie restants
 	private int mpMax; // Points de vie totaux
 	private int defense; // Points de défense/bouclier
 	private int attack; // Points de dégats moyen
 
-	public int range; // Portée d'attaque en nb de cases
-	public int speed; // Portée de déplacement
+	private int range; // Portée d'attaque en nb de cases
+	private int speed; // Portée de déplacement
 	private int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
 
 	public BufferedImage idle;
@@ -55,6 +53,10 @@ public class PblCharacter {
 		return this.name + " a encore " + this.hp + "hp";
 	}
 
+	/**
+	 * Affaiblit le personnage d'un nombre de points de vie donné
+	 * @param damage Points de vie enlevés
+	 */
 	private void weaken(int damage){
 		this.hp -= damage;
 
@@ -63,6 +65,10 @@ public class PblCharacter {
 		}
 	}
 
+	/**
+	 * Calcule les dégâts et attaque un adversaire avec l'attaque de base
+	 * @param adversary Ennemi attaqué
+	 */
 	public void attack(PblCharacter adversary){
 		int damage = this.attack;
 
@@ -79,22 +85,23 @@ public class PblCharacter {
 		adversary.weaken(damage);
 	}
 
-	public boolean isAlive () {
-		return this.alive;
-	}
-
-	public int getPosX() {
-		return this.posX;
-	}
-
-	public int getPosY() {
-		return this.posY;
-	}
-
-	public String getName() { return this.name; }
-
+	/**
+	 * Déplace le personnage vers la case indiquée
+	 * @param x Colonne d'arrivée
+	 * @param y Ligne d'arrivée
+	 */
 	public void moveTo(int x, int y) {
 		this.posX = x;
 		this.posY = y;
 	}
+
+	public boolean isAlive () {
+		return this.alive;
+	}
+	public int getPosX() 	{ return this.posX; }
+	public int getPosY() 	{ return this.posY; }
+	public int getHp() 		{ return this.hp; }
+	public int getHpMax() 	{ return this.hpMax; }
+	public int getRange() 	{ return this.range; }
+	public int getSpeed()	{ return this.speed; }
 }

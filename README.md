@@ -116,7 +116,6 @@ Character sprites from [Pixel Champions Micro Edition](https://chimericalbard.it
 
 Map tileset from [Mozilla's Browser Quest](https://github.com/mozilla/BrowserQuest)
 
-Game logo by @Lgt2x
 
 ## Todo
 
@@ -126,4 +125,4 @@ Objectifs à court ou moyen terme
 - Animation pour le déplacement
 - Equilibrage du jeu
 - Dessin de nouvelles maps
-- Ajout de sprites pour les maps
+- Ecran de titre plus travaillé

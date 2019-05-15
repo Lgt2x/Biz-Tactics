@@ -90,6 +90,9 @@ public class Display extends JFrame {
         message.setText("<html><div style='text-align : center;'>" + text + "</div></html>");
     }
 
+    /**
+     * Ferme la fenêtre courante
+     */
     public void exitApp()
     {
         dispose(); // Fermeture de la fenêtre

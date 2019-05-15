@@ -92,21 +92,10 @@ public class MapDisplay extends JPanel {
         });
     }
 
-    private void drawOverlay(Graphics g) {
-        for (int y = 0; y < gm.sizeY; y++) {
-            for (int x = 0; x < gm.sizeX; x++) {
-                fillTile(x, y, gm.overlay[y][x], g);
-            }
-        }
-    }
-
-    private void fillTile(int x, int y, int color, Graphics g) {
-        if (y >= 0 && y < gm.sizeY && x >= 0 && x < gm.sizeX && color != 0) {
-            g.setColor(colorLib.getBgColor(color)); // Choix de la couleur de peinture
-            g.fillRect(aff.res * x, aff.res * y, aff.res, aff.res);
-        }
-    }
-
+    /**
+     * Dessine le fond de la map de jeu
+     * @param g
+     */
     private void drawBackground(Graphics g) {
         for (int y = 0; y < gm.sizeY; y++) {
             for (int x = 0; x < gm.sizeX; x++) {
@@ -115,6 +104,37 @@ public class MapDisplay extends JPanel {
         }
     }
 
+    /**
+     * Dessine l'overlay au dessus du fond
+     * @param g Image graphique
+     */
+    private void drawOverlay(Graphics g) {
+        for (int y = 0; y < gm.sizeY; y++) {
+            for (int x = 0; x < gm.sizeX; x++) {
+                fillTile(x, y, gm.overlay[y][x], g);
+            }
+        }
+    }
+
+    /**
+     * Remplit une case avec une couleur donnée
+     * @param x
+     * @param y
+     * @param color
+     * @param g
+     */
+    private void fillTile(int x, int y, int color, Graphics g) {
+        if (y >= 0 && y < gm.sizeY && x >= 0 && x < gm.sizeX && color != 0) {
+            g.setColor(colorLib.getBgColor(color)); // Choix de la couleur de peinture
+            g.fillRect(aff.res * x, aff.res * y, aff.res, aff.res);
+        }
+    }
+
+    /**
+     * Dessine les personnages d'un joueur et leurs barres de vie
+     * @param g
+     * @param player
+     */
     private void drawChars(Graphics g, Player player) {
         int imgWidth;
         int imgHeight;
@@ -153,23 +173,29 @@ public class MapDisplay extends JPanel {
                 g.fillRoundRect((int) (aff.res * (character.getPosX() + 0.05)),
                         (int) (aff.res * (character.getPosY() - 0.15)),
 
-                        (int)(aff.res * 0.9 * character.hp/character.hpMax),
+                        (int)(aff.res * 0.9 * character.getHp()/character.getHpMax()),
                         (int) (aff.res * 0.12),
 
                         (int) (aff.res * 0.08),
                         (int) (aff.res * 0.08));
-
-
             }
         }
     }
 
+    /**
+     * Dessin de l'écran de titre
+     * @param g
+     */
     private void drawTitleScreen(Graphics g) {
         g.setColor(Color.WHITE);
         g.fillRect(0,0, aff.res * gm.sizeX, aff.res * gm.sizeY);
         g.drawImage(imgLib.loadImage("Imgs/Logo.png"),aff.res * gm.sizeX / 10, aff.res * gm.sizeY / 10, aff.res * gm.sizeX * 9/10, aff.res * gm.sizeX / 2, null);
     }
 
+    /**
+     * Re-dessin de l'écran, selon la phase de jeu
+     * @param g
+     */
     public void paint(Graphics g) {
         Graphics gw = worldImage.getGraphics(); // Espace de dessin
 

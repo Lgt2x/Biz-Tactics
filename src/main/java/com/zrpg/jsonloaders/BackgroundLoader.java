@@ -11,5 +11,4 @@ public class BackgroundLoader {
     public String toString() {
         return this.name;
     }
-    //    return String.valueOf(this.name);}
 }

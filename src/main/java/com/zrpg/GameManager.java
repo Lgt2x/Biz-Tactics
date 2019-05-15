@@ -11,14 +11,14 @@ import java.io.InputStreamReader;
 
 public class GameManager {
     public String mode = "title";
-    public int[][] background; // Fond, avec ses obstacles
-    public int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map
+    public int[][] background; // Tableau 2D qui représente la map de jeu, chaque nombre correspond à un élément distinct du fond
+    public boolean[][] backgroundObstacles; // Calculé à partir de background, donne la possibilité ou non de se déplacer sur telle case
+    public int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map (possibilité de déplacement, d'attaque etc.
     private int selectedMap = 0;
     private Display aff; // Référence à l'objet d'affichage
 
     public int sizeX; // Nombre de colonnes de la map
     public int sizeY; // Nombre de lignes de la map
-
 
     private boolean gameOver = false; // Vrai lorsque la partie est finie
     public Player[] players; // Liste de joueurs
@@ -59,24 +59,18 @@ public class GameManager {
         players[1].addChar("Summonery", "Summoner", 11, 7);
 
 
-
-
         BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
         sizeX = backgroundLoaded.sizeX;
         sizeY = backgroundLoaded.sizeY;
 
         background = new int[sizeY][sizeX];
+        backgroundObstacles = new boolean[sizeY][sizeX];
         fillBg(backgroundLoaded);
 
         overlay = new int[sizeY][sizeX];
 
-
         aff = new Display(this); // Instanciation de la classe d'affichage
-
-        // setupCharSelect(); // Déclenchement du jeu en initialisant le premier tour
-        // aff.mapPanel.repaint();
-
     }
 
     /**
@@ -130,7 +124,7 @@ public class GameManager {
     }
 
     /**
-     * Mise en place de la sélection des personnages: mise à jour de l'overlay
+     * Mise en place de la sélection des personnages, mise à jour de l'overlay
      */
     public void setupCharSelect() {
         cleanOverlay(); // Nettoyage de l'overlay de l'overlay
@@ -147,7 +141,11 @@ public class GameManager {
         aff.changeMessage(players[tour % 2].getName() + " : quel personnage bouger?");
     }
 
-
+    /**
+     * Déplacement du personnage quand la case sélectionnée est une case de déplacement possible
+     * @param x abscisse de la case
+     * @param y ordonnée de la case
+     */
     private void moveSelect(int x, int y) {
         if (overlay[y][x] == 2 || overlay[y][x] == 3) { // Si le déplacement est possible vers la case sélectionnée
             selectedChar.moveTo(x, y); // Déplacement du personnage
@@ -158,17 +156,24 @@ public class GameManager {
         }
     }
 
-
+    /**
+     * Mise en place de la sélection du mouvement
+     */
     private void setupMoveSelect() {
         cleanOverlay();
 
-        findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.speed + 1, 2);
+        findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.getSpeed() + 1, 2); // Recherche des cases de déplacement possible
         overlay[selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
 
         aff.mapPanel.repaint();
         aff.changeMessage(players[tour % 2].getName() + " : où bouger le personnage?");
     }
 
+    /**
+     * Vérification que l'attaque est possible sur la case donnée, action en conséquence
+     * @param x abscisse de la case
+     * @param y ordonnée de la case
+     */
     private void attackSelect(int x, int y) {
         if (overlay[y][x] == 4) {
             PblCharacter adversary = findChar(x, y, players[(tour + 1) % 2]); // Recherche du personnage ennemi placé sur la case sélectionné
@@ -188,13 +193,17 @@ public class GameManager {
         }
     }
 
+    /**
+     * Mise en place de la sélection de l'attaque
+     */
     private void setupAttackSelect() {
         cleanOverlay();
 
-        findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.range + 1, 4);
+        // Coloriage en rouge des cases où se trouvent des personnages adverses à portée d'attaque
+        findPaths(selectedChar.getPosX(), selectedChar.getPosY(), selectedChar.getRange() + 1, 4);
 
+        // Vérification qu'il y ait bien un personnage à attaquer
         boolean canAttack = false;
-
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 if (overlay[y][x] == 4) {
@@ -228,34 +237,42 @@ public class GameManager {
      */
     private PblCharacter findChar(int x, int y, Player player) {
         PblCharacter character;
+
+        // Itération sur tous les personnage du joueur
         for (int i = 0; i < player.characters.size(); i++) {
             character = player.characters.get(i);
-
-            if (character.getPosX() == x && character.getPosY() == y && character.isAlive()) {
+            if (character.getPosX() == x && character.getPosY() == y && character.isAlive())
                 return character;
-            }
         }
 
+        // Si aucun personnage n'est trouvé, on retourne null
         return null;
     }
 
+    /**
+     * Fonction récursive de recherche des cases accessibles à partir d'un point donné pour une distance donnée
+     * @param x Abscisse du point considéré au départ
+     * @param y Ordonnée
+     * @param distanceLeft Distance restante = vitesse du personnage
+     * @param color couleur correspondant au type de chemin recherché: 2 = bleu pour le déplacement ou 4 = rouge pour l'attaque
+     */
     private void findPaths(int x, int y, int distanceLeft, int color) {
-        if (distanceLeft > 0 && x >= 0 && x < sizeX && y >= 0 && y < sizeY) {
-            if (color == 2) {
-                if (background[y][x] == 0 && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null) {
-                    overlay[y][x] = 2;
-                } else {
+        if (distanceLeft > 0 && x >= 0 && x < sizeX && y >= 0 && y < sizeY) { // Si il reste de la distance à parcourir et que la case est bien sur le plateau
+            if (color == 2) { // Recherche du déplacement
+                // Si la case n'est pas un obstacle, et qu'il n'y a pas de personnage déjà dessus hors le personnage sélectionné
+                if (!backgroundObstacles[y][x] && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null)
+                    overlay[y][x] = 2; // Bleu clair = déplacement possible
+                else
                     return;
-                }
-            } else if (color == 4) {
-                if (findChar(x, y, players[(tour+1)%2]) != null) {
-                    overlay[y][x] = 4;
-                }
-                if (!(background[y][x] == 0 && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null)) {
+            } else if (color == 4) { // Recherche d'attaque
+                if (findChar(x, y, players[(tour+1)%2]) != null) // Si il y a un personnage adverse sur cette case
+                    overlay[y][x] = 4; // On colorie la case en rouge
+                if (!(!backgroundObstacles[y][x] && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null))
+                    // Pas de récursion si la case est un obstacle
                     return;
-                }
             }
 
+            // Récursion sur les cases autour, en diminuant la portée
             findPaths(x-1, y, distanceLeft - 1, color);
             findPaths(x+1, y, distanceLeft - 1, color);
             findPaths(x, y-1, distanceLeft - 1, color);
@@ -297,18 +314,38 @@ public class GameManager {
 
     }
 
+    /**
+     * Transfert des données du BackgroundLoader sous forme de tableau exploitable
+     * @param backgroundLoaded Fond chargé depuis une fichier JSON
+     */
     private void fillBg (BackgroundLoader backgroundLoaded) {
         for (int y = 0; y < backgroundLoaded.sizeY; y++) {
             for (int x = 0; x < backgroundLoaded.sizeX; x++) {
-                background[y][x] = backgroundLoaded.map.get(y).charAt(x) - '0';
-                /* charAt donne une représentation UTF-16 du caractère,
-                 * si on y soustrait la valeur ASCII du caractère 0 (48),
-                 * on trouve bien le chiffre que l'on veut de la chaine
-                 */
+                backgroundObstacles[y][x] = (backgroundLoaded.map.get(y).charAt(x) == '0') ? false : true; // Vrai s'il y a un obstacle
+
+                // Les sprites des éléments de décor sont choisis aléatoirement parmi ceux d'une même catégorie, i.e. déplacement possible ou impossible
+                double rand = Math.random();
+                if (backgroundObstacles[y][x] == false) {
+                    if (rand < 0.90)
+                        background[y][x] = 0; // Herbe (90% de chance)
+                    else
+                        background[y][x] = 1; // Herbe avec fleur (10%)
+                } else {
+                    if (rand < 0.45)
+                        background[y][x] = 2; // Rocher 1 (45%)
+                    else if (rand < 0.9)
+                        background[y][x] = 3; // Rocher 2 (45%)
+                    else
+                        background[y][x] = 4; // Petit rocher (10%)
+                }
             }
         }
     }
 
+    /**
+     * Met en pause le jeu pour une durée déterminée
+     * @param ms Temps de pause en ms
+     */
     public void pause (int ms) {
         try {
             Thread.sleep(ms);

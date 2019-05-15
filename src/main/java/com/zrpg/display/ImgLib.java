@@ -13,8 +13,10 @@ public class ImgLib {
         try {
             bgImages = new BufferedImage[]{
                     ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/grass.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/grass2.png")),
                     ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/rock.png")),
                     ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/rock2.png")),
+                    ImageIO.read(getClass().getClassLoader().getResourceAsStream("Background/rock3.png")),
 
             };
 

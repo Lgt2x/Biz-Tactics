@@ -16,10 +16,13 @@ public class Player{
 		characters = new ArrayList<>();
 	}
 
-	public String toString () {
-		return name;
-	}
-
+	/**
+	 * Ajoute un personnage à la liste de personnages du joueur
+	 * @param name Nom du personnage
+	 * @param type Type de personnage
+	 * @param posX Colonne initiale
+	 * @param posY Ligne initiale
+	 */
 	public void addChar (String name, String type, int posX, int posY) {
 		try {
 			String filename = "Chars/" + type + "/stats.json";
@@ -59,6 +62,9 @@ public class Player{
 	}
 
 	public String getName() {
+		return name;
+	}
+	public String toString () {
 		return name;
 	}
 
