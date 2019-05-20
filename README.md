@@ -121,8 +121,6 @@ Map tileset from [Mozilla's Browser Quest](https://github.com/mozilla/BrowserQue
 
 Objectifs à court ou moyen terme
 
-- Animation pour l'attaque
-- Animation pour le déplacement
 - Equilibrage du jeu
 - Dessin de nouvelles maps
 - Ecran de titre plus travaillé

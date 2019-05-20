@@ -14,8 +14,6 @@ public class PblCharacter {
 
 	private int hp; // Points de vie restants
 	private int hpMax; // Points de vie totaux
-	private int mp; // Points de magie restants
-	private int mpMax; // Points de vie totaux
 	private int defense; // Points de défense/bouclier
 	private int attack; // Points de dégats moyen
 
@@ -23,9 +21,11 @@ public class PblCharacter {
 	private int speed; // Portée de déplacement
 	private int precision; // Variation des dégats d'attaque, l'attaque va de attack - precision à attack + precision
 
-	public BufferedImage idle;
+	private ImgLib imgLib; // Référence à la classe de gestion d'images
+	private BufferedImage currentSprite; // Sprite affiché à l'écran à tout instant, modifié lors de l'attaque
+	private boolean facesLeft; // Vrai si le personnage est tourné vers la gauche
 
-	public PblCharacter(String name, int posX, int posY, String type, int hp, int mp, int defense, int attack, int range, int precision, int speed){
+	public PblCharacter(String name, int posX, int posY, String type, int hp, int defense, int attack, int range, int precision, int speed, boolean facesLeft){
 		this.name = name;
 		this.type = type;
 		this.alive = true;
@@ -35,8 +35,6 @@ public class PblCharacter {
 
 		this.hp = hp;
 		this.hpMax = hp;
-		this.mp = mp;
-		this.mpMax = mp;
 		this.defense = defense;
 
 		this.attack = attack;
@@ -44,9 +42,9 @@ public class PblCharacter {
 		this.speed = speed;
 		this.precision = precision;
 
-		ImgLib lib = new ImgLib();
-		this.idle = lib.loadImage("Chars/" + this.type + "/idle.png");
-
+		this.facesLeft = facesLeft;
+		this.imgLib = new ImgLib();
+		this.currentSprite = imgLib.loadImage("Chars/" + this.type + "/idle.png"); // Chargement de l'image de base du personnage
 	}
 
 	public String toString(){
@@ -73,16 +71,14 @@ public class PblCharacter {
 		int damage = this.attack;
 
 		/*
-		Ta formule empêche la compilation, à revoir...
-
-		int damage = (this.attack*4 - adversary.defense*2) * (1 - (100-this.precision)/100 * (0.5 + (int)(Math.random())));
-		*/
-
-		/*
 		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats
 		*/
 
 		adversary.weaken(damage);
+	}
+
+	public void changeSprite(String sprite) {
+		this.currentSprite = imgLib.loadImage("Chars/" + this.type + "/" + sprite + ".png");
 	}
 
 	/**
@@ -91,17 +87,23 @@ public class PblCharacter {
 	 * @param y Ligne d'arrivée
 	 */
 	public void moveTo(int x, int y) {
+		if (this.posX < x) {
+			this.facesLeft = false;
+		} else if (this.posX > x) {
+			this.facesLeft = true;
+		}
+
 		this.posX = x;
 		this.posY = y;
 	}
 
-	public boolean isAlive () {
-		return this.alive;
-	}
+	public boolean isAlive () { return this.alive; }
+	public boolean isFacingLeft() {return this.facesLeft; }
 	public int getPosX() 	{ return this.posX; }
 	public int getPosY() 	{ return this.posY; }
 	public int getHp() 		{ return this.hp; }
 	public int getHpMax() 	{ return this.hpMax; }
 	public int getRange() 	{ return this.range; }
 	public int getSpeed()	{ return this.speed; }
+	public BufferedImage getCurrentSprite() { return this.currentSprite; }
 }

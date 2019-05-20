@@ -9,10 +9,12 @@ import com.zrpg.jsonloaders.*;
 public class Player{
 
 	private String name;
+	private boolean facesLeft;
 	public ArrayList<PblCharacter> characters; // Tableau des personnages du joueur
 
-	public Player(String name) {
+	public Player(String name, boolean facesLeft) {
 		this.name = name;
+		this.facesLeft = facesLeft;
 		characters = new ArrayList<>();
 	}
 
@@ -39,12 +41,12 @@ public class Player{
 				posY,
 				loader.type,
 				loader.hp,
-				loader.mp,
 				loader.defense,
 				loader.attack,
 				loader.range,
 				loader.precision,
-				loader.speed
+				loader.speed,
+				this.facesLeft
 			));
 
         } catch (Exception e) {
@@ -52,20 +54,19 @@ public class Player{
         }
 	}
 
+	/**
+	 * Vérifie si le joueur a perdu
+	 * @return vrai si le joueur a perdu la partie
+	 */
 	public boolean isDed () {
-		for (PblCharacter character : characters) {
+		for (PblCharacter character : characters) { // Itération dans la liste de personnages
 			if (character.isAlive())
 				return false;
 		}
-
 		return true;
 	}
 
-	public String getName() {
-		return name;
-	}
-	public String toString () {
-		return name;
-	}
+	public String getName() { return name; }
+	public String toString () { return name; }
 
 }
