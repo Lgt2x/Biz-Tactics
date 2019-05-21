@@ -25,6 +25,10 @@ public class MapDisplay extends JPanel {
 	private int caseClickedX = 0; // X de la case où le clic a été fait
 	private int caseClickedY = 0;
 
+	private int playButtonX;
+	private int playButtonY;
+	private boolean isButtonHovered = false;
+
 
 	public MapDisplay(Display aff, GameManager gm) {
 		this.aff = aff;
@@ -62,7 +66,7 @@ public class MapDisplay extends JPanel {
 						gm.clickHandle(caseX, caseY); // Appel d'une fonction de la classe maîtresse pour savoir si ce clic a des conséquences sur le jeu
 						repaint(); // Recalcul des éléments du canvas mis à jour
 					}
-				} else if (gm.mode == "title"){
+				} else if (gm.mode == "title" && e.getX() > playButtonX && e.getX() < playButtonX + 300 && e.getY() > playButtonY && e.getY() < playButtonY + 60){
 					gm.clickTitleScreen("play");
 				}
 			}
@@ -72,24 +76,31 @@ public class MapDisplay extends JPanel {
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				int x = e.getX(); // Récupération des coordonnées du clic
-				int y = e.getY();
+				if (gm.mode == "game") {
+					int x = e.getX(); // Récupération des coordonnées du clic
+					int y = e.getY();
 
 
-				int caseX = x / aff.res;
-				int caseY = y / aff.res;
+					int caseX = x / aff.res;
+					int caseY = y / aff.res;
 
-				if (gm.overlay[caseHoveredY][caseHoveredX] == 3)
-					gm.overlay[caseHoveredY][caseHoveredX] = 2;
+					if (gm.overlay[caseHoveredY][caseHoveredX] == 3)
+						gm.overlay[caseHoveredY][caseHoveredX] = 2;
 
-				caseHoveredX = caseX;
-				caseHoveredY = caseY;
+					caseHoveredX = caseX;
+					caseHoveredY = caseY;
 
-				if (gm.overlay[caseY][caseX] == 2)
-					gm.overlay[caseY][caseX] = 3;
+					if (gm.overlay[caseY][caseX] == 2)
+						gm.overlay[caseY][caseX] = 3;
+
+				} else if (gm.mode == "title") {
+					if (e.getX() > playButtonX && e.getX() < playButtonX + 300 && e.getY() > playButtonY && e.getY() < playButtonY + 60)
+						isButtonHovered = true;
+					else
+						isButtonHovered = false;
+				}
 
 				repaint();
-
 			}
 		});
 	}
@@ -206,6 +217,19 @@ public class MapDisplay extends JPanel {
 
 		g.fillRect(0,0, windowSizeX, windowSizeY);
 		g.drawImage(imgLib.loadImage("Imgs/Logo.png"), (int) (windowSizeX * 0.05), (int) (windowSizeY * 0.1), (int) (windowSizeX * 0.9), (int) (windowSizeX * 0.9 * 9/16), null);
+
+		g.setColor(colorLib.getColor("Darkest Blue"));
+		if (isButtonHovered)
+			g.setColor(colorLib.getColor("Darker Blue"));
+
+		g.fillRoundRect((int)(windowSizeX * 0.55), (int)(windowSizeY * 0.5), 300, 60, 10, 10);
+
+		this.playButtonX = (int)(windowSizeX * 0.55);
+		this.playButtonY = (int)(windowSizeY * 0.5);
+
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Verdana", Font.BOLD, 30));
+		g.drawString("PLAY", (int)(windowSizeX * 0.55 + 100), (int)(windowSizeY * 0.5 + 40));
 	}
 
 	/**

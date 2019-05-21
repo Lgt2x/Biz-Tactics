@@ -74,29 +74,31 @@ Ecrit au 29/04
     │           └── jsonloaders             // Classes utilisées pour la dé-serialization de fichiers JSON
     │               ├── BackgroundLoader.java
     │               └── CharLoader.java
-    ├── resources                           // Ressources du jeu: images, stats, maps...
-    │   ├── Json
-    │   │   ├── charStats                   // Statistiques de jeu des différentes classes de personnage
-    │   │   │   ├── Berserker.json
-    │   │   │   ├── Knight.json
-    │   │   │   └── Sniper.json
-    │   │   └── maps.json
-    │   └── Sprites
-    │       ├── Background
-    │       │   ├── grass.png
-    │       │   ├── rock.png
-    │       │   └── rock2.png
-    │       ├── Berserker
-    │       │   ├── attack.png
-    │       │   └── idle.png
-    │       ├── Knight
-    │       │   └── idle.png
-    │       └── Sniper
-    │           ├── attack.png
-    │           └── idle.png
-    └── scripts                             // Scripts de lancement du jeu
-        ├── start.bat                       // Script Windows, lancé par le task Play de Gradle
-        └── start.sh                        // Script UNIX, non utilisé pour le moment
+    ├── resources                           // Ressources images, JSON
+    │   ├── Background
+    │   │   ├── grass.png
+    │   │   ├── grass2.png
+    │   │   ├── rock.png
+    │   │   ├── rock2.png
+    │   │   └── rock3.png
+    │   ├── Chars
+    │   │   ├── Bard
+    │   │   │   ├── attack.png
+    │   │   │   ├── idle.png
+    │   │   │   └── stats.json
+    │   │   .
+    │   │   .
+    │   │   .
+    │   │   └── Witch
+    │   │       ├── attack.png
+    │   │       ├── idle.png
+    │   │       └── stats.json
+    │   ├── Imgs
+    │   │   └── Logo.png
+    │   └── maps.json 
+        └── scripts                             // Scripts de lancement du jeu
+            ├── start.bat                       // Script Windows, lancé par le task Play de Gradle
+            └── start.sh                        // Script UNIX, non utilisé pour le moment
 ```
 
 ## Lancement du jeu
@@ -123,4 +125,3 @@ Objectifs à court ou moyen terme
 
 - Equilibrage du jeu
 - Dessin de nouvelles maps
-- Ecran de titre plus travaillé
