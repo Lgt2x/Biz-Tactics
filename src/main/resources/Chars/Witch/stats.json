@@ -1,10 +1,10 @@
 {
 	"type": "Witch",
-	"hp": 50,
-	"mp": 10,
-	"defense": 20,
-	"attack": 20,
-	"range": 2,
-	"speed": 2,
-	"precision": 2
+	"hp": 150,
+	"defense": 8,
+	"attack": 24,
+	"range": 5,
+	"speed": 1,
+	"precision": 9,
+	"melee": false
 }

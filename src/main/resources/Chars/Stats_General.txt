@@ -1,0 +1,125 @@
+Formule de calcul des dégats: (Attack±Precision) * (20/(20+def))
+(Pour calculer facilement en Python: ```f = lambda x: 20/(20+x)```
+
+Equilibrage en essayant de faire en sorte que la somme des + et - soit nulle, sans compter la précision qui est indépendante (plus précis <=> réduit l'attribut précision i.e. l'incertitude sur les dommages).
+
+Les personnages qui tirent à distance à travers les obstacles (range) ont des stats moins 
+élevées car cette caractéristique leur donne un avantage certain.
+
+Sur le champ de bataille, chaque joueur contrôle 3 personnages, dont au moins 1 melee et 1 range.
+
+Les stats sont données dans des fichier JSON modifiables à souhait, pour faire des modifications de précision.
+
+BASE STATS
+    MELEE
+	    ATTACK = 40
+	    HP = 200
+		DEFENSE = 10 (Attack reduction 33%)
+	    RANGE = 3
+	    SPEED = 3
+		PRECISION = 4
+	RANGE
+	    ATTACK = 30
+	    HP = 150
+		DEFENSE = 8
+	    RANGE = 3
+	    SPEED = 3
+		PRECISON = 5
+
+Attack +/- = Atk +/-20%, 
+Attack ++/-- = Atk +/-40%, 
+
+HP +/- = HP +/-20%, def +/- 3 ou 2
+HP ++/-- = HP +/-40%, def +/- 5 ou 7
+
+Range/Speed +/-: +/-1
+Range/Speed ++/--: +/-2
+
+Precision +/-: +/-2
+Precision ++/--: +/-4
+
+
+Bard (Range)
+    HP/DEF ++
+    Attack -
+    Range -
+    Speed =
+	Precison =
+
+Priestress (Range)
+    HP/DEF --
+    Attack =
+    Range +
+    Speed +
+	Precision +
+
+Witch (Range)
+    HP/DEF =
+    Attack -
+    Range ++
+    Speed --
+	Precision --
+ 
+Sage (Range)
+    HP/DEF =
+    Attack ++
+    Range -
+    Speed -
+	Precision ++
+ 
+Demon (Melee)
+    HP/DEF ++
+    Attack =
+    Range -
+    Speed -
+	Precision -
+
+Mercenary (Melee)
+    HP/DEF =
+    Attack +
+    Range --
+    Speed ++
+	Precision -
+
+Queen (Melee)
+    HP/DEF -
+    Attack +
+    Range =
+    Speed +
+	Precision ++
+
+Summoner (Melee)
+    HP/DEF -
+    Attack ++
+    Range =
+    Speed -
+	Precision =
+
+
+BASE STATS
+    MELEE
+	    ATTACK = 40
+	    HP = 200
+		DEFENSE = 10 (Attack reduction 33%)
+	    RANGE = 3
+	    SPEED = 3
+		PRECISION = 4
+	RANGE
+	    ATTACK = 30
+	    HP = 150
+		DEFENSE = 8
+	    RANGE = 3
+	    SPEED = 3
+		PRECISON = 5
+
+Attack +/- = Atk +/-20%, 
+Attack ++/-- = Atk +/-40%, 
+
+HP +/- = HP +/-20%, def +/- 3 ou 2
+HP ++/-- = HP +/-40%, def +/- 5 ou 7
+
+Range/Speed +/-: +/-1
+Range/Speed ++/--: +/-2
+
+Precision +/-: +/-2
+Precision ++/--: +/-4

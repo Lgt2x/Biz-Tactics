@@ -8,4 +8,5 @@ public class CharLoader {
 	public int range;
 	public int precision;
 	public int speed;
+	public boolean melee;
 }

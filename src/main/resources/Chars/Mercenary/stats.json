@@ -1,10 +1,10 @@
 {
 	"type": "Mercenary",
-	"hp": 50,
-	"mp": 10,
-	"defense": 20,
-	"attack": 20,
-	"range": 2,
-	"speed": 2,
-	"precision": 2
+	"hp": 200,
+	"defense": 10,
+	"attack": 48,
+	"range": 1,
+	"speed": 5,
+	"precision": 6,
+	"melee": true
 }

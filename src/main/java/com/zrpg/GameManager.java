@@ -12,10 +12,11 @@ import java.io.InputStreamReader;
 public class GameManager {
 	public String mode = "title";
 	public int[][] background; // Tableau 2D qui représente la map de jeu, chaque nombre correspond à un élément distinct du fond
-	public boolean[][] backgroundObstacles; // Calculé à partir de background, donne la possibilité ou non de se déplacer sur telle case
+	private boolean[][] backgroundObstacles; // Calculé à partir de background, donne la possibilité ou non de se déplacer sur telle case
 	public int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map (possibilité de déplacement, d'attaque etc.
-	private int selectedMap = 0;
+	private int selectedMap = 0; // Map sélectionnée, le numéro correspond à l'ordre dans le fichier JSON maps.json
 	private Display aff; // Référence à l'objet d'affichage
+	private final String[] CHAR_TYPES = new String[]{"Bard", "Demon", "Mercenary", "Priestess", "Queen", "Sage", "Summoner", "Witch"}; // Listes des types disponibles
 
 	public int sizeX; // Nombre de colonnes de la map
 	public int sizeY; // Nombre de lignes de la map
@@ -23,41 +24,27 @@ public class GameManager {
 	private boolean gameOver = false; // Vrai lorsque la partie est finie
 	public Player[] players; // Liste de joueurs
 	private PblCharacter selectedChar; // Personnage joué ce tour, pour le déplacement et l'attaque
-	private int tour;
+	private int turn;
 	private int step;
 
     /*
-        tour%2 = 0 => Joueur 1
-        tour%2 = 1 => Joueur 2
+        turn%2 == 0 => Joueur 1
+        turn%2 == 1 => Joueur 2
     */
 
 
     /*
-        step%3 = 0 => Sélection du personnage à jouer
-        step%3 = 1 => Sélection de la case de déplacement
-        step%3 = 2 => Sélection du personnage à attaquer
+        step%3 == 0 => Sélection du personnage à jouer
+        step%3 == 1 => Sélection de la case de déplacement
+        step%3 == 2 => Sélection du personnage à attaquer
     */
 
 
 	public GameManager() {
 
-		tour = 0;
+		turn = (int)(Math.random()*2);
+		System.out.println(turn);
 		step = 0;
-
-		players = new Player[]{
-				new Player("Joueur 1", false),
-				new Player("Joueur 2", true)
-		};
-
-		players[0].addChar("Bardy", "Bard", 3, 3);
-		players[0].addChar("Demony", "Demon", 3, 5);
-		players[0].addChar("Mercenaryy", "Mercenary", 3, 7);
-
-
-		players[1].addChar("Sagey", "Sage", 11, 3);
-		players[1].addChar("Witchy", "Witch", 11, 5);
-		players[1].addChar("Summonery", "Summoner", 11, 7);
-
 
 		BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
@@ -65,10 +52,17 @@ public class GameManager {
 		sizeY = backgroundLoaded.sizeY;
 
 		background = new int[sizeY][sizeX];
+		overlay = new int[sizeY][sizeX];
 		backgroundObstacles = new boolean[sizeY][sizeX];
+		
 		fillBg(backgroundLoaded);
 
-		overlay = new int[sizeY][sizeX];
+		players = new Player[]{
+				new Player("Joueur 1", false),
+				new Player("Joueur 2", true)
+		};
+
+		addChars(backgroundLoaded);
 
 		aff = new Display(this); // Instanciation de la classe d'affichage
 	}
@@ -100,8 +94,8 @@ public class GameManager {
 		}
 	}
 
-	public void clickTitleScreen(String button) {
-		if (button == "play") {
+	public void clickTitleScreen(String buttonValue) {
+		if (buttonValue.equals("play")) {
 			aff.initGame();
 			this.mode = "game";
 			aff.mapPanel.repaint();
@@ -115,7 +109,7 @@ public class GameManager {
 	 */
 	private void charSelect(int x, int y) {
 		if (overlay[y][x] == 1) { // Si la case cliquée est effectivement un personnage
-			selectedChar = findChar(x, y, players[tour % 2]); // Recherche le personnage positionné sur la case (x,y)
+			selectedChar = findChar(x, y, players[turn % 2]); // Recherche le personnage positionné sur la case (x,y)
 			step = 1;
 
 			setupMoveSelect(); // Setup de l'étape suivante
@@ -131,14 +125,14 @@ public class GameManager {
 
 		PblCharacter character;
 
-		for (int i = 0; i < players[tour % 2].characters.size(); i++) {
-			character = players[tour % 2].characters.get(i);
+		for (int i = 0; i < players[turn % 2].characters.size(); i++) {
+			character = players[turn % 2].characters.get(i);
 			if (character.isAlive()) {
 				overlay[character.getPosY()][character.getPosX()] = 1; // Le personnage peut être sélectionné, on le met en vert
 			}
 		}
 
-		aff.changeMessage(players[tour % 2].getName() + " : quel personnage bouger?");
+		aff.changeMessage(players[turn % 2].getName() + " : quel personnage bouger?");
 	}
 
 	/**
@@ -166,7 +160,7 @@ public class GameManager {
 		overlay[selectedChar.getPosY()][selectedChar.getPosX()] = 2; // Le personnage peut aussi ne pas se déplacer
 
 		aff.mapPanel.repaint();
-		aff.changeMessage(players[tour % 2].getName() + " : où bouger le personnage?");
+		aff.changeMessage(players[turn % 2].getName() + " : où bouger le personnage?");
 	}
 
 	/**
@@ -176,22 +170,23 @@ public class GameManager {
 	 */
 	private void attackSelect(int x, int y) {
 		if (overlay[y][x] == 4) {
-			PblCharacter adversary = findChar(x, y, players[(tour + 1) % 2]); // Recherche du personnage ennemi placé sur la case sélectionné
+			PblCharacter adversary = findChar(x, y, players[(turn + 1) % 2]); // Recherche du personnage ennemi placé sur la case sélectionné
 
-			selectedChar.attack(adversary);
+			if (adversary != null)
+				selectedChar.attack(adversary);
 
 			selectedChar.changeSprite("idle");
 			aff.mapPanel.repaint();
 
-			if (players[(tour+1)%2].isDed()) {
+			if (players[(turn+1)%2].isDed()) {
 				gameOver = true;
 				cleanOverlay();
-				aff.changeMessage("<html>" + players[tour%2].getName() + " gagne la partie!<br>Cliquez n'importe où pour recommencer</html>");
+				aff.changeMessage("<html>" + players[turn%2].getName() + " gagne la partie!<br>Cliquez n'importe où pour recommencer</html>");
 				return;
 			}
 
 			step = 0; // Retour à la première étape
-			tour++; // Au tour adverse
+			turn++; // Au tour adverse
 
 			setupCharSelect();
 		}
@@ -222,12 +217,12 @@ public class GameManager {
 
 		if (!canAttack) { // Si il n'y a personne à attaquer, passage à l'étape suivante
 			step = 0;
-			tour++;
+			turn++;
 			setupCharSelect();
 			return;
 		}
 
-		aff.changeMessage(players[tour % 2].getName() + " : quel personnage attaquer?");
+		aff.changeMessage(players[turn % 2].getName() + " : quel personnage attaquer?");
 		selectedChar.changeSprite("attack");
 		aff.mapPanel.repaint();
 	}
@@ -265,16 +260,20 @@ public class GameManager {
 		if (distanceLeft > 0 && x >= 0 && x < sizeX && y >= 0 && y < sizeY) { // Si il reste de la distance à parcourir et que la case est bien sur le plateau
 			if (color == 2) { // Recherche du déplacement
 				// Si la case n'est pas un obstacle, et qu'il n'y a pas de personnage déjà dessus hors le personnage sélectionné
-				if (!backgroundObstacles[y][x] && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null)
+				if (!backgroundObstacles[y][x] && (findChar(x, y, players[turn%2]) == selectedChar || findChar(x, y, players[turn%2]) == null) && findChar(x, y, players[(turn+1)%2]) == null)
 					overlay[y][x] = 2; // Bleu clair = déplacement possible
 				else
 					return;
 			} else if (color == 4) { // Recherche d'attaque
-				if (findChar(x, y, players[(tour+1)%2]) != null) // Si il y a un personnage adverse sur cette case
+				if (findChar(x, y, players[(turn+1)%2]) != null) // Si il y a un personnage adverse sur cette case
 					overlay[y][x] = 4; // On colorie la case en rouge
-				if (!(!backgroundObstacles[y][x] && (findChar(x, y, players[tour%2]) == selectedChar || findChar(x, y, players[tour%2]) == null) && findChar(x, y, players[(tour+1)%2]) == null))
-					// Pas de récursion si la case est un obstacle
-					return;
+				if (selectedChar.isMelee()) {
+					if (! (!backgroundObstacles[y][x] && (findChar(x, y, players[turn%2]) == selectedChar
+							|| findChar(x, y, players[turn%2]) == null) && findChar(x, y, players[(turn+1)%2]) == null))
+						// Pas de récursion si la case est un obstacle
+						return;
+				}
+
 			}
 
 			// Récursion sur les cases autour, en diminuant la portée
@@ -326,11 +325,11 @@ public class GameManager {
 	private void fillBg (BackgroundLoader backgroundLoaded) {
 		for (int y = 0; y < backgroundLoaded.sizeY; y++) {
 			for (int x = 0; x < backgroundLoaded.sizeX; x++) {
-				backgroundObstacles[y][x] = (backgroundLoaded.map.get(y).charAt(x) == '0') ? false : true; // Vrai s'il y a un obstacle
+				backgroundObstacles[y][x] = backgroundLoaded.map.get(y).charAt(x) == '0'; // Vrai s'il y a un obstacle
 
 				// Les sprites des éléments de décor sont choisis aléatoirement parmi ceux d'une même catégorie, i.e. déplacement possible ou impossible
 				double rand = Math.random();
-				if (backgroundObstacles[y][x] == false) {
+				if (!backgroundObstacles[y][x]) {
 					if (rand < 0.90)
 						background[y][x] = 0; // Herbe (90% de chance)
 					else
@@ -344,6 +343,23 @@ public class GameManager {
 						background[y][x] = 4; // Petit rocher (10%)
 				}
 			}
+		}
+	}
+
+	/**
+	 * Ajoute les personnages associés à un joueur, tel qu'un type de personnage est attribué une seule fois au maximum
+	 * @param backgroundLoaded référence à la map chargée pour un positionnement correct
+	 */
+	private void addChars(BackgroundLoader backgroundLoaded) {
+		boolean[] pickedChars = new boolean[8];
+		int type;
+		for (int i=0;i<6;i++) {
+			do {
+				type = (int)(Math.random() * 8);
+			} while (pickedChars[type]);
+			pickedChars[type] = true;
+
+			players[i < 3 ? 0 : 1].addChar(CHAR_TYPES[type], backgroundLoaded.charPos[i][0], backgroundLoaded.charPos[i][1]);
 		}
 	}
 }

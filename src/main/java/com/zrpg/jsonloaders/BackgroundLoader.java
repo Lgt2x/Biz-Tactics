@@ -7,6 +7,7 @@ public class BackgroundLoader {
 	public int sizeX;
 	public int sizeY;
 	public ArrayList<String> map;
+	public int[][] charPos;
 
 	public String toString() {
 		return this.name;

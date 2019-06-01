@@ -1,10 +1,10 @@
 {
 	"type": "Summoner",
-	"hp": 50,
-	"mp": 10,
-	"defense": 20,
-	"attack": 20,
-	"range": 2,
+	"hp": 180,
+	"defense": 8,
+	"attack": 56,
+	"range": 3,
 	"speed": 2,
-	"precision": 2
+	"precision": 4,
+	"melee": true
 }

@@ -13,8 +13,8 @@ public class ColorLib {
 		color.put("White", new Color(255, 255, 255, 255));  // Blanc
 		color.put("Light blue", new Color(172, 191, 255, 255));  // Bleu clair
 		color.put("Red", new Color(173, 14, 43, 255));    //Rouge
-		color.put("Darker Blue", new Color(82, 155, 176, 255));
-		color.put("Darkest Blue", new Color(77, 100, 197, 255));
+		color.put("Darker Blue", new Color(82, 155, 176, 126));
+		color.put("Darkest Blue", new Color(77, 100, 197, 126));
 
 		bgColor.add(new Color(255, 255, 255, 80));  // 0: Blanc
 		bgColor.add(new Color(255, 204, 0, 80));    // 1: jaune de sélection de personnage

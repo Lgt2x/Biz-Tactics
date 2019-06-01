@@ -1,10 +1,10 @@
 {
 	"type": "Priestess",
-	"hp": 50,
-	"mp": 10,
-	"defense": 20,
+	"hp": 90,
+	"defense": 3,
 	"attack": 20,
-	"range": 2,
-	"speed": 2,
-	"precision": 2
+	"range": 3,
+	"speed": 4,
+	"precision": 3,
+	"melee": false
 }

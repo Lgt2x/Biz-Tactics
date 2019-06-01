@@ -5,9 +5,9 @@ import com.zrpg.display.ImgLib;
 
 public class PblCharacter {
 
-	private String name; // Nom du personnage
 	private boolean alive; // Est-ce que le personnage est en vie
 	private String type; // Classe du personnage
+	private boolean melee; // Vrai si le personnage n'a pas la capacité d'attaquer à travers les obstacles
 
 	private int posX; // colonne sur la map
 	private int posY; // ligne
@@ -25,9 +25,9 @@ public class PblCharacter {
 	private BufferedImage currentSprite; // Sprite affiché à l'écran à tout instant, modifié lors de l'attaque
 	private boolean facesLeft; // Vrai si le personnage est tourné vers la gauche
 
-	public PblCharacter(String name, int posX, int posY, String type, int hp, int defense, int attack, int range, int precision, int speed, boolean facesLeft){
-		this.name = name;
+	public PblCharacter(int posX, int posY, String type, int hp, int defense, int attack, int range, int precision, int speed, boolean facesLeft, boolean melee){
 		this.type = type;
+		this.melee = melee;
 		this.alive = true;
 
 		this.posX = posX;
@@ -48,7 +48,7 @@ public class PblCharacter {
 	}
 
 	public String toString(){
-		return this.name + " a encore " + this.hp + "hp";
+		return this.type + " a encore " + this.hp + "hp";
 	}
 
 	/**
@@ -68,12 +68,7 @@ public class PblCharacter {
 	 * @param adversary Ennemi attaqué
 	 */
 	public void attack(PblCharacter adversary){
-		int damage = this.attack;
-
-		/*
-		Formule de base, à améliorer en regardant ce lien: http://www.rpgmakervx-fr.com/t21422-formules-de-degats
-		*/
-
+		int damage = this.attack * (20/(20+adversary.defense)); // f(x) = 20/(20+x) donne f(0) = 1 et f(50) ~= 0.3, réduit donc l'attaque avec proportion
 		adversary.weaken(damage);
 	}
 
@@ -98,7 +93,8 @@ public class PblCharacter {
 	}
 
 	public boolean isAlive () { return this.alive; }
-	public boolean isFacingLeft() {return this.facesLeft; }
+	public boolean isFacingLeft() { return this.facesLeft; }
+	public boolean isMelee() { return this.melee; }
 	public int getPosX() 	{ return this.posX; }
 	public int getPosY() 	{ return this.posY; }
 	public int getHp() 		{ return this.hp; }
