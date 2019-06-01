@@ -325,7 +325,7 @@ public class GameManager {
 	private void fillBg (BackgroundLoader backgroundLoaded) {
 		for (int y = 0; y < backgroundLoaded.sizeY; y++) {
 			for (int x = 0; x < backgroundLoaded.sizeX; x++) {
-				backgroundObstacles[y][x] = backgroundLoaded.map.get(y).charAt(x) == '0'; // Vrai s'il y a un obstacle
+				backgroundObstacles[y][x] = !(backgroundLoaded.map.get(y).charAt(x) == '0'); // Vrai s'il y a un obstacle
 
 				// Les sprites des éléments de décor sont choisis aléatoirement parmi ceux d'une même catégorie, i.e. déplacement possible ou impossible
 				double rand = Math.random();
