@@ -1,39 +1,36 @@
 ![Game logo](Graphics/Logo.png)
 
-Un Tactical-RPG au tour par tour.
+Un TRPG au tour par tour.
 
 ## Cadre du projet
 
-Nous avons choisi le 5ème problème, le jeu de plateau, où l'objectif est de simuler un combat entre deux entités. Le style du TRPG s'est imposé naturellement à la lecture de l'énoncé, comme combat entre deux joueurs manipulant des tableaux 2D.
+Nous avons choisi le 5ème problème proposé, le jeu de plateau, où l'objectif est de simuler un combat entre deux entités. Le style du TRPG s'est imposé naturellement à la lecture de l'énoncé, comme combat entre deux joueurs manipulant des tableaux 2D.
 
 ## Cahier des charges
 
-Sur une grille, chaque joueur contrôle plusieurs personnages tour à tour. Chaque personnage a des caractéristiques différentes. Le premier joueur qui a éliminé les personnages de l'adversaire gagne.
+Sur une grille, chaque joueur contrôle 3 personnages tour à tour. Chaque personnage a des caractéristiques différentes. Le premier joueur qui a éliminé les personnages de l'adversaire gagne.
 
-A chaque tour, le joueur prend le contrôle d'un des personnages (dans un ordre défini au début du jeu). Ce personnage peut effectuer 2 actions: se déplacer, puis attaquer un personnage adverse ou se défendre.
+A chaque tour, le joueur prend le contrôle d'un de ses personnages; ce personnage peut effectuer 2 actions: se déplacer puis attaquer un personnage ennemi à portée.
 
-La carte présentera des obstacles limitant le déplacement, et des objets à récupérer (en bonus).
+La carte présentera des obstacles limitant le déplacement, représentés par des pierres.
 
 Nous utiliserons Swing et AWT pour l'affichage graphique et la gestion des évements. Deux composants principaux: la carte de jeu, sous forme de grille, et une boite de texte en dessous pour afficher diverses informations.
 
-Le contrôle du jeu est fait à la souris principalement, pour le choix de la case de déplacement, l'attaque etc.
+Le contrôle du jeu est fait à la souris uniquement, pour le choix du personnage à jouer, de la case de déplacement et du personnage adverse à attaquer.
 
-## Répartition du travail
+## Répartition du travail théorique
 
-- Zac: Classes de personnages, attaques
-- Louis: Input, affichage
+- Zac: Classes de personnages, équilibrage du jeu
+- Louis: Gestion des entrées utilisateur, affichage
 - Matias: Gestion du jeu
 
-### Inspirations
 
-Gameplay librement inspiré de la série Fire Emblem, de Final Fantasy Tactics...
 
 ## Planification
 
-La date de rendu est le 3 Juin 2019, ce qui nous laisse un mois de développement environ, à compter du 29 Avril.
+La date de rendu est le 3 Juin, ce qui nous laisse un mois de développement environ, à compter du 29 Avril.
 
-### Planning prévisionnel général
-Ecrit au 29/04
+### Planning prévisionnel général, ecrit au 29/04
 - Semaine du 29/04 : Rédaction du cahier des charges, organisation du code et des tâches.
 - Semaine du 06/05 : Début du développement, chacun crée ses classes de son côté.
 - Semaine du 13/05 : Relier les différentes classes, pour avoir un premier prototype fonctionnel.
@@ -47,13 +44,27 @@ Ecrit au 29/04
     - Mise en place de l'affichage avec des images, détection du survol et du clic
     - Gestion du gameplay, des tours de jeu, fonctionnement général
 - Semaine du 06/05 au 12/05
-    - Chargement des caractéristiques de personnage et maps depuis un fichier JSON en ressources
+    - Chargement des caractéristiques de personnage et maps depuis un fichier JSON
     - Passage du jeu sous Gradle
     - Amélioration du jeu: détection d'obstacles, calculs de chemins
     - Détails graphiques: Barres de vie
     - Fin du jeu
+    - Dessin du logo
+- Semaine du 13/05 au 19/04
+    - Création de types de personnages
+    - Recherche d'images pour le tileset et les personnages
+    - Embellissement des maps
+    - Ecran de titre du jeu
+- Semaine du 20/05 au 25/05
+    - Ajout d'un bouton play sur l'écran de titre
+    - Animation de l'attaque
+    - Animation des déplacements
+- Semaine du 26/05 au 02/06
+    - Equilibrage des caractéristiques des types de personnages
+    -  Création de nouvelles maps
+    - Cleanup du code
 
-## Organisation du code
+## Organisation du projet
 
 ```
 .
@@ -108,9 +119,14 @@ Windows
 ./gradlew play 
 ```
 
-Unix
+OS X / Linux
 ```bash
 ./play.sh
+```
+
+Lancement du `.jar` (voir onglet realease ou `build/libs` :
+```bash
+java -jar project-rpg.jar
 ```
 
 ## Credits
@@ -118,9 +134,4 @@ Character sprites from [Pixel Champions Micro Edition](https://chimericalbard.it
 
 Map tileset from [Mozilla's Browser Quest](https://github.com/mozilla/BrowserQuest)
 
-
-## Todo
-
-Objectifs à court ou moyen terme
-
-- Compléter le readme
+Gameplay librement inspiré de la série Fire Emblem, de Final Fantasy Tactics...
