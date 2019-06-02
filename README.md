@@ -112,6 +112,9 @@ La date de rendu est le 3 Juin, ce qui nous laisse un mois de développement env
             └── start.sh                        // Script UNIX, non utilisé pour le moment
 ```
 
+## Diagramme de classes UML
+![Diagramme UML](Graphics/UML.png)
+
 ## Lancement du jeu
 
 Windows
