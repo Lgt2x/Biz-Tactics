@@ -25,7 +25,7 @@ public class Display extends JFrame {
 		message = new JLabel("");
 
 
-		int messageHeight = 100; // Hauteur du Label
+		int messageHeight = 60; // Hauteur du Label
 		setPreferredSize(new Dimension(res * gm.sizeX,
 				res * gm.sizeY + messageHeight)); // Réglage de la taille de la fenêtre
 
@@ -46,7 +46,7 @@ public class Display extends JFrame {
 		message.setForeground(Color.BLACK); // Couleur du texte
 
 		bottomPanel.setBackground(new Color(255, 255, 255)); // Couleur de fond du texte
-		bottomPanel.setMaximumSize(new Dimension(res*gm.sizeY, 100)); // Taille max du Label
+		bottomPanel.setMaximumSize(new Dimension(res*gm.sizeY, messageHeight)); // Taille max du Label
 		bottomPanel.add(message);
 
 		pack(); // Arrange la fenêtre

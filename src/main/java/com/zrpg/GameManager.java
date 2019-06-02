@@ -14,7 +14,7 @@ public class GameManager {
 	public int[][] background; // Tableau 2D qui représente la map de jeu, chaque nombre correspond à un élément distinct du fond
 	private boolean[][] backgroundObstacles; // Calculé à partir de background, donne la possibilité ou non de se déplacer sur telle case
 	public int[][] overlay; // Tableau 2D qui représente les cases de l'overlay sur la map (possibilité de déplacement, d'attaque etc.
-	private int selectedMap = 0; // Map sélectionnée, le numéro correspond à l'ordre dans le fichier JSON maps.json
+	private int selectedMap; // Map sélectionnée, le numéro correspond à l'ordre dans le fichier JSON maps.json
 	private Display aff; // Référence à l'objet d'affichage
 	private final String[] CHAR_TYPES = new String[]{"Bard", "Demon", "Mercenary", "Priestess", "Queen", "Sage", "Summoner", "Witch"}; // Listes des types disponibles
 
@@ -43,9 +43,9 @@ public class GameManager {
 	public GameManager() {
 
 		turn = (int)(Math.random()*2);
-		System.out.println(turn);
 		step = 0;
 
+		int selectedMap = (int)(Math.random()*3);
 		BackgroundLoader backgroundLoaded = loadMap(selectedMap);
 
 		sizeX = backgroundLoaded.sizeX;

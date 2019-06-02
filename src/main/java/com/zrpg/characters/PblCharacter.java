@@ -68,7 +68,7 @@ public class PblCharacter {
 	 * @param adversary Ennemi attaqué
 	 */
 	public void attack(PblCharacter adversary){
-		int damage = this.attack * (20/(20+adversary.defense)); // f(x) = 20/(20+x) donne f(0) = 1 et f(50) ~= 0.3, réduit donc l'attaque avec proportion
+		int damage = (int)((double)(this.attack) * (20f/(20f+(double)(adversary.defense)))); // f(x) = 20/(20+x) donne f(0) = 1 et f(50) ~= 0.3, réduit donc l'attaque avec proportion
 		adversary.weaken(damage);
 	}
 
